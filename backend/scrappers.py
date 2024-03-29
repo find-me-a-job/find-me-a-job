@@ -7,27 +7,27 @@ from selenium.webdriver.chrome.options import Options
 from selectolax.parser import HTMLParser
 from bs4 import BeautifulSoup
 import pandas as pd
-from flask import jsonify, Response
+from flask import Response
 
 headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
     "AppId" : "109",
     "SystemId" : "Naukri"
 }
-def scrapeNaukriDotCom(title: str, experience: int, location: str) -> Response:
+
+def scrapeNaukriDotCom(title: str, experience: int, location: str) -> list:
     titleSEOKey = title.replace(" ", "-")
     title = title.replace(" ", "%20")
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
     resp = requests.get(testURL, headers=headers)
     respJson = resp.json()
-
-    listings = {"title": [],
+    listingsCSVStyle = {
+                "title": [],
                 "companyName": [],
                 "skills": [],
                 "jobURL": []
-                }
- 
+            }
     jobDetails = respJson["jobDetails"] 
     for jobDetail in jobDetails:
         try:
@@ -37,19 +37,32 @@ def scrapeNaukriDotCom(title: str, experience: int, location: str) -> Response:
             jobDetailJobURL = jobDetail["jdURL"]
         except KeyError as err:
             continue
-        listings["title"].append(jobDetailTitle)
-        listings["companyName"].append(jobDetailCompanyName)
-        listings["skills"].append(jobDetailTagsAndSkills)
-        listings["jobURL"].append(jobDetailJobURL)
+        listingsCSVStyle["title"].append(jobDetailTitle)
+        listingsCSVStyle["companyName"].append(jobDetailCompanyName)
+        listingsCSVStyle["skills"].append(jobDetailTagsAndSkills)
+        listingsCSVStyle["jobURL"].append(jobDetailJobURL)
+    
+    listingsJsonStyle = []
 
-    listings = jsonify(listings)
-    return listings
+    for i in range(0, len(listingsCSVStyle["title"])):
+        temp = {}
+        temp["companyName"] = listingsCSVStyle["companyName"][i]
+        temp["title"] = listingsCSVStyle["title"][i]
+        temp["skills"] = listingsCSVStyle["skills"][i]
+        temp["jobURL"] = "https://www.naukri.com" + listingsCSVStyle["jobURL"][i]
+        listingsJsonStyle.append(temp)
+
+
+    # listingsJsonStyle = json.dumps(listingsJsonStyle)
+    return listingsJsonStyle
+    # listingsCSVStyle = json.dumps(listingsCSVStyle)
+    # return listingsCSVStyle
 
     
-def scrapeInternshala(profile: str, location: str) -> Response:
+def scrapeInternshala(profile: str, location: str) -> list:
     # for now we are only supporting profile and location
     # profile is a mendatory argument
-    URL = "https://internshala.com/internships/"
+    URL = "https://www.internshala.com/internships/"
     profile = profile.strip().lower().replace(' ', '-') + "-internship/"
     location = location.strip().lower().replace(' ', '-')
     if(location != ''):
@@ -58,9 +71,9 @@ def scrapeInternshala(profile: str, location: str) -> Response:
         URL = f"https://internshala.com/internships/work-from-home-{profile}-internships/part-time-true/"
     
     listingsCSVStyle = {"title": [],
-                "companyName": [],
-                "skills": [],
-                "jobURL": []
+                    "companyName": [],
+                    "skills": [],
+                    "jobURL": []
                 }
     resp = httpx.get(URL, headers=headers)
     soup = BeautifulSoup(resp, 'html.parser')
@@ -101,17 +114,7 @@ def scrapeInternshala(profile: str, location: str) -> Response:
                 listingsCSVStyle["skills"].append(["No skills listed"])
             listingsCSVStyle["jobURL"].append(internshipListingCardDetailsPageLink)
 
-    # df = pd.DataFrame(listings)
-    # df.to_csv("hello.csv")
-    print(len(listingsCSVStyle["title"]))
-    print(len(listingsCSVStyle["companyName"]))
-    print(len(listingsCSVStyle["skills"]))
-    print(len(listingsCSVStyle["jobURL"]))
-    # print(df)
-    # ret = {"test": "testresponse"}
-    # jsonify(ret)
-    # print("jhkhjhkj",ret)
-    # return "ret"
+    
 
     listingsJsonStyle = []
 
@@ -124,5 +127,12 @@ def scrapeInternshala(profile: str, location: str) -> Response:
         listingsJsonStyle.append(temp)
 
 
-    listingsJsonStyle = jsonify(listingsJsonStyle)
+    # listingsJsonStyle = json.dumps(listingsJsonStyle)
     return listingsJsonStyle
+
+def scrape(info: dict) -> json:
+    internshalaData = scrapeInternshala(info["title"], info["location"])
+    naukriDotComData = scrapeNaukriDotCom(info["title"], info["experience"], info["location"])
+    response = internshalaData + naukriDotComData
+    response = json.dumps(response)
+    return response

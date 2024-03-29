@@ -1,17 +1,20 @@
-from flask import jsonify, Flask, request
-from scrappers import scrapeInternshala, scrapeNaukriDotCom
+from flask import Flask, request
+from scrappers import scrape
 import json
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    naukriDotComData = scrapeNaukriDotCom("web developer", 0, "vadodara")
-    internShalaData = scrapeInternshala("web developer", "vadodara")
-    # naukriDotComData = json.dumps(naukriDotComData.json)
-    internShalaData = json.dumps(internShalaData.json, indent=2)
-    print("done")
-    return internShalaData
+    return "home"
+@app.route("/post", methods=["POST"])
+def data():
+    # naukriDotComData = scrapeNaukriDotCom("web developer", 0, "vadodara")
+    # internShalaData = scrapeInternshala("web developer", "vadodara")
+    # print(internShalaData)
+    # return {naukriDotComData, internShalaData}
+    info = json.loads(request.data.decode())
+    return scrape(info)
 
 if __name__ == "__main__":
     app.run(debug=True)
