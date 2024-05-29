@@ -3,11 +3,12 @@ from scrappers import scrape
 import json
 
 app = Flask(__name__)
-
+#PORT = 5000
 @app.route("/")
 def home():
-    return "home"
-@app.route("/post", methods=["POST"])
+    print("home!")
+    return
+@app.route("/known-field-data", methods=["GET"])
 def data():
     # naukriDotComData = scrapeNaukriDotCom("web developer", 0, "vadodara")
     # internShalaData = scrapeInternshala("web developer", "vadodara")

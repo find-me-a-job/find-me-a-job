@@ -1,10 +1,6 @@
 import httpx
 import requests
 import json
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from selectolax.parser import HTMLParser
 from bs4 import BeautifulSoup
 import pandas as pd
 from flask import Response
