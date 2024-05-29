@@ -1,19 +1,20 @@
+#PORT = 5000
 from flask import Flask, request
+from flask_cors import CORS, cross_origin
 from scrappers import scrape
 import json
 
 app = Flask(__name__)
-#PORT = 5000
+CORS(app, supports_credentials=True)
+
 @app.route("/")
 def home():
     print("home!")
     return
-@app.route("/known-field-data", methods=["GET"])
+
+@app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
-    # naukriDotComData = scrapeNaukriDotCom("web developer", 0, "vadodara")
-    # internShalaData = scrapeInternshala("web developer", "vadodara")
-    # print(internShalaData)
-    # return {naukriDotComData, internShalaData}
+    print("---------------")
     info = json.loads(request.data.decode())
     return scrape(info)
 
