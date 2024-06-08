@@ -1,17 +1,12 @@
 import httpx
 from selectolax.parser import HTMLParser
-from selectolax.parser import HTMLParser
 import requests
 import json
 from bs4 import BeautifulSoup
 import pandas as pd
 from flask import Response
 from dataclasses import dataclass, asdict
-import collections
-from dataclasses import dataclass, asdict
-import collections
 headers = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     "AppId" : "109",
     "SystemId" : "Naukri"
@@ -62,7 +57,6 @@ def scrapeNaukriDotCom(title: str, experience: int, location: str) -> list:
 def scrapeInternshala(profile: str, location: str) -> list:
     # for now we are only supporting profile and location
     # profile is a mendatory argument
-    URL = "https://www.internshala.com/internship/"
     URL = "https://www.internshala.com/internship/"
     profile = profile.strip().lower().replace(' ', '-') + "-internship/"
     location = location.strip().lower().replace(' ', '-')
