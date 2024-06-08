@@ -12,11 +12,19 @@ def home():
     print("home!")
     return
 
+@app.route("/api/v1/test")
+def test():
+    print("test response from backend!")
+    return "return statement of test"
+
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     print("---------------")
     info = json.loads(request.data.decode())
-    return scrape(info)
+    return json.dumps(scrape(info))
+    # return scrape(info=info)
 
 if __name__ == "__main__":
     app.run(debug=True)
+#vadodara
+#web development
