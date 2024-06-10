@@ -1,4 +1,4 @@
-import httpx
+ import httpx
 from selectolax.parser import HTMLParser
 import requests
 import json
@@ -239,8 +239,6 @@ def scrapeInternshalaV2(profile="", location="", experience=0):
     returnData["skills"] = sorted_array
     returnData["average-salary"] = averageSalary
     returnData["applicants-to-jobs-ratio"] = applicants_ratio_to_jobs_ratio
-    with open("output.json", "w+") as f:
-        f.write(json.dumps(returnData))
     
     return returnData
     
@@ -253,4 +251,12 @@ def scrape(info: dict) -> json:
     return response
 
 if __name__ == "__main__":
-    scrapeInternshalaV2("web-development", "", 0)
+    web_development = scrapeInternshalaV2("web-development", "", 0)
+    data_science = scrapeInternshalaV2("data_science", "", 0)
+    cyber_security = scrapeInternshalaV2("cyber-security", "", 0)
+    cloud_computing = scrapeInternshalaV2("cloud-computing", "", 0)
+
+    print(web_development)
+    print(data_science)
+    print(cyber_security)
+    print(cloud_computing)
