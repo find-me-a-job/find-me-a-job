@@ -246,10 +246,11 @@ def scrapeInternshalaV2(profile="", location="", experience=0):
 
 def scrape(info: dict) -> json:
     internshalaData = scrapeInternshalaV2(profile=info["title"], location=info["location"], experience=info["experience"])
-    naukriDotComData = scrapeNaukriDotCom(info["title"], info["experience"], info["location"])
-    response = internshalaData + naukriDotComData
-    response = json.dumps(response)
-    return response
+    # naukriDotComData = scrapeNaukriDotCom(info["title"], info["experience"], info["location"])
+    # response = internshalaData + naukriDotComData
+    # response = json.dumps(response)
+    # return response
+    return json.dumps(internshalaData)
 
 if __name__ == "__main__":
     scrapeInternshalaV2("web-development", "", 0)

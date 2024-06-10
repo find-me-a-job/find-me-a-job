@@ -8,13 +8,13 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Input } from "@/components/ui/input"
 
 
-
 function FieldKnown() {
     const [field, setField] = useState("web devlopment");
     const [location, setLocation] = useState("");
     const [experience, setExperience] = useState(0);
     const [scrappedData, setScrappedData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
+    const [isDataReady, setIsDataReady] = useState(false);
     function getScrappedDataForKnownField(field: string, location: string, experience: number){
         setIsLoading(true);
         console.log("inside onclick function!!!!!")
@@ -32,15 +32,21 @@ function FieldKnown() {
             }
             
         }).then((response)=>{
-            console.log(response.data)
+            console.log("response data: "+response.data)
             setScrappedData(response.data);
             console.log(scrappedData)
+            window.localStorage.setItem("scrapped-data", JSON.stringify(response.data))
+            console.log("value that is not in local storage" + window.localStorage.getItem("notinls"));
             setIsLoading(false);
-            window.open("http://localhost:5173/fieldunknown")
+            setIsDataReady(true);
         }).catch((e) => {
-            console.log("error!")
-            console.log(e)
-        })
+                setIsLoading(false);
+                console.log("error!")
+                console.log(e)
+                })
+            }
+    function handleCheckData(){
+        window.open("http://localhost:5173/fieldknown/results")
     }
     return (
         <div className='h-screen flex items-center justify-center'>
@@ -60,8 +66,28 @@ function FieldKnown() {
                                 <Label>Experience</Label>
                                 <Input type="number" placeholder="0"  onChange={(e) => setExperience(parseInt(e.target.value))} />
                             </div>
-                            {isLoading ? <Button disabled
-                            className='w-full' onClick={()=>getScrappedDataForKnownField(field, location, experience)}><Loader2 className="mr-2 h-4 w-4 animate-spin"/> Search</Button> : <Link to="/fieldknown/results"> <Button className='w-full' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>Search</Button></Link>}
+                            {(isLoading) ? 
+                                <div className="">
+                                    <Button disabled className='w-full my-2' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
+                                        <span>Search</span>
+                                    </Button>
+                                    
+                                </div>
+                                 : 
+                                <div>
+                                    {(isDataReady) ? 
+                                        <Button className="w-full" onClick={handleCheckData}>
+                                            <span>Check Data</span>
+                                        </Button> : <div>
+                                        <Button className='w-full' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
+                                            <span>Search</span>
+                                        </Button>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            
                         </div>
                     </div>
                 </CardContent>
