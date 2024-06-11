@@ -257,6 +257,8 @@ if __name__ == "__main__":
     cloud_computing = scrapeInternshalaV2("cloud-computing", "", 0)
 
     print(web_development)
-    print(data_science)
-    print(cyber_security)
+    # print(data_science)
+    # print(cyber_security)
     print(cloud_computing)
+
+    #hello from deep
