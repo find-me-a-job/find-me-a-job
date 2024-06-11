@@ -1,6 +1,6 @@
 # Deep
 first
 second
-third
+<!-- third -->
 fourth
 fifth Zaid
