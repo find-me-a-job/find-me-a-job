@@ -1,2 +1,3 @@
-pythonvenv
 __pycache__
+.venv
+notes.txt
