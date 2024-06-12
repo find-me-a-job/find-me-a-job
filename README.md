@@ -11,3 +11,4 @@ cd find-me-a-job/backend
 docker build -t fmj-backend .
 docker run -p 5000:5000 fmj-backend
 ```
+This would just startup the backend server, you would still need to use a service like postman to send http requests to server inorder to get an output. We are working on providing a docker-compose file so that the whole project can be setted up locally with one single command...
