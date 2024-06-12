@@ -1,0 +1,22 @@
+FROM python:3.12-alpine3.20
+
+WORKDIR /usr/src/app
+
+COPY poetry.lock pyproject.toml ./
+
+RUN apk update \
+    apk add --no-cache \
+    build-base \
+    curl
+        
+ENV PATH="/root/.local/bin:$PATH"
+
+RUN pip3 install poetry
+
+RUN poetry install --no-root
+
+COPY . .
+
+EXPOSE 5000
+
+CMD [ "poetry", "run", "python3", "backend/main.py" ]
