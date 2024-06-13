@@ -13,6 +13,11 @@ cd find-me-a-job/backend
 docker build -t fmj-backend .
 docker run -p 5000:5000 fmj-backend
 ```
+If your terminal is hung after a docker command then you might need to use sudo
+```
+sudo docker build -t fmj-backend .
+sudo docker run -p 5000:5000 fmj-backend
+```
 
 ## Without Docker
 ### Mac & Linux
