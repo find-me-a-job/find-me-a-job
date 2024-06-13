@@ -24,7 +24,7 @@ sudo docker run -p 5000:5000 fmj-backend
 - Install a non-ancient version of [python](https://www.python.org/downloads/)
 - Install poetry
 ```
-# igonre if already installed
+# igonre if poetry is already installed
 curl -sSL https://install.python-poetry.org | python3 -
 ```
   
