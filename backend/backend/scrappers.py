@@ -24,8 +24,8 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
                 "skills": {},
             }
     jobDetails = jsonResponse["jobDetails"]
-    with open("temp.json", "w+") as f:
-        f.write(json.dumps(jobDetails))
+    # with open("temp.json", "w+") as f:
+    #     f.write(json.dumps(jobDetails))
     skills = []
     sumOfSalaries = 0
     numberOfSalariesCalculated = 0
@@ -83,7 +83,7 @@ def scrapeInternshala(profile="", location="", experience=0):
         if(listingCards is None):
             print("listing container was not found in the html so early returning!")
             str = webpage.html
-            with open("output.txt", 'w+') as f:
+            with open("../../out/output.txt", 'w+') as f:
                 f.write(str)
             return
         else:
@@ -162,7 +162,7 @@ def scrapeInternshala(profile="", location="", experience=0):
     
     print(skillsDict)
 
-    with open("skillsDict.json", "w+") as f:
+    with open("../../out/skillsDict.json", "w+") as f:
         f.write(json.dumps(skillsDict))
 
     sorted_items = sorted(skillsDict.items(), key=lambda x: x[1], reverse=True)
@@ -176,36 +176,42 @@ def scrapeInternshala(profile="", location="", experience=0):
     returnData["skills"] = skillsDict
     returnData["average-salary"] = averageSalary
     returnData["applicants-to-jobs-ratio"] = applicants_ratio_to_jobs_ratio
-    with open("temp.json", "w+") as f:
-        f.write(json.dumps(web_development))
+    # with open("temp.json", "w+") as f:
+    #     f.write(json.dumps(web_development))
     
     return returnData
-    
 
-def scrape(info: dict) -> json:
-    internshalaData = scrapeInternshala(profile=info["title"], location=info["location"], experience=info["experience"])
-    # naukriDotComData = scrapeNaukriDotCom(info["title"], info["experience"], info["location"])
-    # response = internshalaData + naukriDotComData
-    # response = json.dumps(response)
-    # return response
-    return json.dumps(internshalaData)
+def incrementValueOfKey(dict, key):
+    if key in dict:
+        dict[key] += 1
+    else:
+        dict[key] = 1
+
+def skillsAggregator(*args):
+    if(len(args) == 1):
+        return args[0]
+    data = args[0]
+    averageSalarySum = data["average-salary"]
+    numberOfAverageSalaryValuesCounted = 0
+    for i in range(1, len(args)):
+        for key in args[i]["skills"].keys():
+            incrementValueOfKey(data["skills"], key)
+        numberOfAverageSalaryValuesCounted += 1
+        averageSalarySum += args[i]["average-salary"]
+    data["average-salary"] = averageSalarySum / numberOfAverageSalaryValuesCounted    
+    return data
+
+def scrapeKnownField(info: dict) -> json:
+    data = {}
+    data[info["title"]] = skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
+    return json.dumps(data)
 
 if __name__ == "__main__":
-    # web_development = scrapeInternshala("web-development", "", 0)
-    # data_science = scrapeInternshala("data_science", "", 0)
-    # cyber_security = scrapeInternshala("cyber-security", "", 0)
-    # cloud_computing = scrapeInternshala("cloud-computing", "", 0)
-
-    # print(web_development)
-    # # print(data_science)
-    # # print(cyber_security)
-    # print(cloud_computing)
-
     data = {}
-    data["web_development"] = scrapeNaukriDotCom("web-development", "", 0)
-    data["data_science"] = scrapeNaukriDotCom("data_science", "", 0)
-    data["cyber_security"] = scrapeNaukriDotCom("cyber-security", "", 0)
-    data["cloud_computing"] = scrapeNaukriDotCom("cloud-computing", "", 0)
+    data["web-development"] = skillsAggregator(scrapeNaukriDotCom("web-development", "", 0), scrapeInternshala("web-development", "", 0))
+    data["data-science"] = skillsAggregator(scrapeNaukriDotCom("data-science", "", 0), scrapeInternshala("data_science", "", 0))
+    data["cyber-security"] = skillsAggregator(scrapeNaukriDotCom("cyber-security", "", 0), scrapeInternshala("cyber-security", "", 0))
+    data["cloud-computing"] = skillsAggregator(scrapeNaukriDotCom("cloud-computing", "", 0), scrapeInternshala("cloud-computing", "", 0))
 
-    with open("output.json", "a+") as f:
+    with open("../../out/output.json", "w+") as f:
         f.write(json.dumps(data))
