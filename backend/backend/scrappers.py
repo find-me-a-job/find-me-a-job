@@ -14,8 +14,6 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
     httpxResponse = httpx.get(testURL, headers=headers)
-    # print(resp.text)
-    # return
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
@@ -24,8 +22,6 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
                 "skills": {},
             }
     jobDetails = jsonResponse["jobDetails"]
-    # with open("temp.json", "w+") as f:
-    #     f.write(json.dumps(jobDetails))
     skills = []
     sumOfSalaries = 0
     numberOfSalariesCalculated = 0
@@ -34,10 +30,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
             #skills
             skills = jobDetail["tagsAndSkills"].lower().split(",")
             for skill in skills:
-                if skill in returnData["skills"]:
-                    returnData["skills"][skill] += 1
-                else:
-                    returnData["skills"][skill] = 1
+                incrementValueOfKey(returnData["skills"], skill)
             #average-salary
             salary = jobDetail["placeholders"][1]["label"]
             if salary != "Not disclosed":
@@ -46,7 +39,6 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
 
                 sumOfSalaries += salary
                 numberOfSalariesCalculated += 1
-            # applicants-to-jobs-ratio
 
         except KeyError as err:
             continue
@@ -54,8 +46,6 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
         returnData["average-salary"] = 0
     else:
         returnData["average-salary"] = sumOfSalaries / numberOfSalariesCalculated
-    # with open("skills.json", "w+") as f:
-    #     f.write(json.dumps(returnData))
     
     return returnData
 
@@ -128,10 +118,7 @@ def scrapeInternshala(profile="", location="", experience=0):
                 print("---------------XXXXXXXXXXXXXXXXXXXXXXXXXX---------------")
             # Skills new format
             for skill in skills_for_current_listing:
-                if(skill in skillsDict):
-                    skillsDict[skill] += 1
-                else:
-                    skillsDict[skill] = 1
+                incrementValueOfKey(skillsDict, skill)
         print("totalListingsVisitedForSkills :", totalListingsVisitedForSkills, " / ", "skillsNotFound :", skillsNotFound)
         for i in salaries:
             if(i.text().strip() == "Competitive salary"):
