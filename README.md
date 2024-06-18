@@ -36,3 +36,24 @@ cd backend
 poetry run python3 main.py
 ```
 This would just startup the backend server, you would still need to use a service like postman to send http requests to server inorder to get an output. We are working on providing a docker-compose file so that the whole project can be setted up locally with one single command...
+## Usage
+You would need to send post request to
+```
+http://127.0.0.1:5000/api/v1/known-field-data
+```
+Request body:
+```
+{
+    "title": string,
+    "experience": int,
+    "location": string
+}
+```
+Request body example
+```
+{
+    "title": "web development",
+    "experience": 0,
+    "location": "banglore"
+}
+```
