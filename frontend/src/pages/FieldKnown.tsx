@@ -31,7 +31,7 @@ function FieldKnown() {
             }
             
         }).then((response)=>{
-            console.log("response data: "+response.data)
+            console.log("response data: " + response.data)
             setScrappedData(response.data);
             console.log(scrappedData)
             window.localStorage.setItem("scrapped-data", JSON.stringify(response.data))

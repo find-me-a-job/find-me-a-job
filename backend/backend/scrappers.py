@@ -50,6 +50,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     return returnData
 
 def scrapeInternshala(profile="", location="", experience=0):
+    profile = profile.replace(" ", "-")
     def get_html(page):
         if(experience == 0):
             # Fresher
@@ -61,10 +62,16 @@ def scrapeInternshala(profile="", location="", experience=0):
     webpage = get_html(1)
     number_of_pages = int(webpage.css_first("span#total_pages").text())
     salaryList = []
+    averageSalary = 0
     skills = []
     skillsDict = {}
     applicants = []
+    number_of_applicants = 0
+    number_of_listings_scrapped_for_number_of_applicants = 0
     for page_number in range(1, number_of_pages):
+        # # This if block is here for debugging. It would take a really long time to scrape so many pages so i limit it to only 1 page here.
+        # if page_number > 1:
+        #     break
         print("page", page_number, "/", number_of_pages)
         webpage = get_html(page_number);
         salaries = webpage.css("span.desktop")
@@ -73,8 +80,6 @@ def scrapeInternshala(profile="", location="", experience=0):
         if(listingCards is None):
             print("listing container was not found in the html so early returning!")
             str = webpage.html
-            with open("../../out/output.txt", 'w+') as f:
-                f.write(str)
             return
         else:
             listingCards = listingCards.iter()
@@ -87,16 +92,12 @@ def scrapeInternshala(profile="", location="", experience=0):
                 continue
         totalListingsVisitedForSkills = 0
         skillsNotFound = 0
-        number_of_applicants = 0
-        number_of_listings_scrapped_for_number_of_applicants = 0
         # Scrapping Skills #
         for url in listingLinks:
             listingPage = HTMLParser(httpx.get(url, headers=headers).text)
             # skillsExtractedRaw = listingPage.css("span.round_tabs")
             skillsRawHTML = listingPage.css("span.round_tabs")
             totalListingsVisitedForSkills += 1
-            # Number of applicants
-            # number_of_applicants_on_current_listing
             if(len(skillsRawHTML) == 0):
                 print("LENGTH OF SKILLS_RAW_HTML WAS 0 - No skills div found.")
                 skillsNotFound += 1
@@ -115,7 +116,6 @@ def scrapeInternshala(profile="", location="", experience=0):
                 print("something went wrong while scrapping number of applicants")
                 print(e)
                 print("-->", number_of_applicants_in_current_listing)
-                print("---------------XXXXXXXXXXXXXXXXXXXXXXXXXX---------------")
             # Skills new format
             for skill in skills_for_current_listing:
                 incrementValueOfKey(skillsDict, skill)
@@ -145,26 +145,21 @@ def scrapeInternshala(profile="", location="", experience=0):
     else:
         print("why is salaryList's length 0????")
         print(salaryList)
-        print("------------------------------------")
     
     print(skillsDict)
 
-    with open("../../out/skillsDict.json", "w+") as f:
-        f.write(json.dumps(skillsDict))
 
     sorted_items = sorted(skillsDict.items(), key=lambda x: x[1], reverse=True)
 
     skillsSortedByFrequency = [item[0] for item in sorted_items]
 
-    # skillsDict = sorted(skillsDict, reverse=False)
-    # Returing data
-    applicants_ratio_to_jobs_ratio = number_of_applicants / number_of_listings_scrapped_for_number_of_applicants
+    applicants_to_jobs_ratio = 0
+    if number_of_listings_scrapped_for_number_of_applicants > 0:
+        applicants_to_jobs_ratio = number_of_applicants / number_of_listings_scrapped_for_number_of_applicants
     returnData = {}
     returnData["skills"] = skillsDict
     returnData["average-salary"] = averageSalary
-    returnData["applicants-to-jobs-ratio"] = applicants_ratio_to_jobs_ratio
-    # with open("temp.json", "w+") as f:
-    #     f.write(json.dumps(web_development))
+    returnData["applicants-to-jobs-ratio"] = applicants_to_jobs_ratio
     
     return returnData
 
@@ -188,10 +183,19 @@ def skillsAggregator(*args):
     data["average-salary"] = averageSalarySum / numberOfAverageSalaryValuesCounted    
     return data
 
-def scrapeKnownField(info: dict) -> json:
-    data = {}
-    data[info["title"]] = skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
-    return json.dumps(data)
+def scrapeKnownField(info: dict) -> dict:
+    data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
+    topSkills = sorted(data["skills"], key=data["skills"].get, reverse=True)
+    data["top-skills"] = topSkills[0:10]
+    topSkillsData = []
+    numberOfTopSkills = len(topSkills) if len(topSkills) < 10 else 10
+    for i in range(numberOfTopSkills):
+        tempDict = {}
+        tempDict["skill"] = topSkills[i]
+        tempDict["value"] = data["skills"][topSkills[i]]
+        topSkillsData.append(tempDict)
+    data["top-skills-data"] = topSkillsData
+    return data
 
 if __name__ == "__main__":
     data = {}
@@ -199,6 +203,3 @@ if __name__ == "__main__":
     data["data-science"] = skillsAggregator(scrapeNaukriDotCom("data-science", "", 0), scrapeInternshala("data_science", "", 0))
     data["cyber-security"] = skillsAggregator(scrapeNaukriDotCom("cyber-security", "", 0), scrapeInternshala("cyber-security", "", 0))
     data["cloud-computing"] = skillsAggregator(scrapeNaukriDotCom("cloud-computing", "", 0), scrapeInternshala("cloud-computing", "", 0))
-
-    with open("../../out/output.json", "w+") as f:
-        f.write(json.dumps(data))
