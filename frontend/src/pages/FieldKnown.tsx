@@ -45,7 +45,7 @@ function FieldKnown() {
                 })
             }
     function handleCheckData(){
-        window.open("http://localhost:5173/fieldknown/results")
+        window.open("http://localhost:8080/fieldknown/results")
     }
     return (
         <div className='h-screen flex items-center justify-center'>

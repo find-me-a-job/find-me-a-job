@@ -2,12 +2,21 @@ import * as d3 from "d3";
 import { useEffect, useRef } from "react";
 
 const Barchart = () => {
-  const ref = useRef();
-  let scrappedData = window.localStorage.getItem("scrapped-data")
-  scrappedData = JSON.parse(scrappedData)
+  const ref = useRef<SVGSVGElement>(null);
+  type SkillData = {
+    "skill": string,
+    "value": number
+  }
+  type ScrappedData = {
+    "top-skills": string[],
+    "top-skills-data": SkillData[]
+  }
+  const scrappedDataString: string | null = window.localStorage.getItem("scrapped-data")
+  const scrappedData: ScrappedData = scrappedDataString ? JSON.parse(scrappedDataString) : { "top-skills": [], "top-skills-data": [] };
   console.log(scrappedData)
 
   useEffect(() => {
+    if (!ref.current) return;
     // set the dimensions and margins of the graph
     const margin = { top: 30, right: 30, bottom: 70, left: 60 },
       width = 460 - margin.left - margin.right,
@@ -43,16 +52,15 @@ const Barchart = () => {
 
       // Bars
       svg
-        .selectAll("mybar")
+        .selectAll("top-skills-barchart")
         .data(scrappedData["top-skills-data"])
         .join("rect")
-        .attr("x", (d) => x(d.skill))
+        .attr("x", (d) => x(d.skill)!)
         .attr("y", (d) => y(d.value))
         .attr("width", x.bandwidth())
         .attr("height", (d) => height - y(d.value))
         .attr("fill", "#5f0f40");
     });
-
   return <svg width={460} height={400} id="barchart" ref={ref} />;
 };
 
