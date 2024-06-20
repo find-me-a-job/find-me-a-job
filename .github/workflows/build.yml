@@ -19,4 +19,4 @@ jobs:
             - name: Install Dependencies
               run: cd frontend && npm install
             - name: Build Project
-              run: npm run build
+              run: cd frontend && npm run build
