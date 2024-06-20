@@ -12,12 +12,11 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-            - run: cd frontend
             - name: Use Node.js
               uses: actions/setup-node@v3
               with: 
                 node-version: '20'
             - name: Install Dependencies
-              run: npm install
+              run: cd frontend && npm install
             - name: Build Project
               run: npm run build
