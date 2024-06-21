@@ -1,0 +1,23 @@
+name: Lint Check
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    Frontend-Build-Check:
+        name: Checks if the frontend successfully passes linting checks or not.
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+            - name: Use Node.js
+              uses: actions/setup-node@v3
+              with: 
+                node-version: '20'
+            - name: Install dependencies
+              run: cd frontend && npm install
+            - name: Run linting checks
+              run: cd frontend && npm run lint
+    
