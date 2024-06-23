@@ -28,4 +28,16 @@ jobs:
             context: .
             file: docker/Dockerfile.backend
 
+        - name: Pull on EC2 Machine
+          uses: appleboy/ssh-action@v1.0.3
+          with:
+            host: ${{ secrets.EC2_HOST }}
+            username: ${{ secrets.EC2_USERNAME }}
+            key: ${{ secrets.EC2_KEY }}
+            script: |
+              sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
+              sudo docker stop fmj-backend || true
+              sudo docker rm fmj-backend || true
+              docker run -d --name fmj-backend -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
+
 

@@ -3,19 +3,19 @@
 
 We are actively working on this project but we have'nt yet deployed this application so if you want to use this right now, then you would need to set it up locally.
 
-# Installation
+# Setup Locally
 
 ## With Docker
 Make sure you have [docker](https://docs.docker.com/engine/install/) installed.
 ```
 git clone https://github.com/find-me-a-job/find-me-a-job.git
-cd find-me-a-job/backend
-docker build -t fmj-backend .
+cd find-me-a-job
+docker build -t fmj-backend -f docker/Dockerfile.backend .
 docker run -p 5000:5000 fmj-backend
 ```
 If your terminal is hung after a docker command then you might need to use sudo
 ```
-sudo docker build -t fmj-backend .
+sudo docker build -t fmj-backend -f docker/Dockerfile.backend .
 sudo docker run -p 5000:5000 fmj-backend
 ```
 
