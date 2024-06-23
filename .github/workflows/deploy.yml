@@ -12,7 +12,7 @@ jobs:
         - name: Checkout repository
           uses: actions/checkout@v2
         - name: Create containers
-          run: docker build -t fmj-frontend -f docker/Dockerfile.frontend . && docker build -t fmj-backend -f docker/Dockerfile.backend . 
+          run: docker build -t fmj-backend -f docker/Dockerfile.backend . 
 
         - name: Log in to Docker Hub
           uses: docker/login-action@v3
@@ -20,13 +20,6 @@ jobs:
             username: ${{ secrets.DOCKERHUB_USERNAME }}
             password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-        - name: Build and Push Frontend
-          uses: docker/build-push-action@v2
-          with:
-            push: true
-            tags: ${{ secrets.DOCKERHUB_USERNAME }}/fmj-frontend:latest
-            context: .
-            file: docker/Dockerfile.frontend
         - name: Build and Push Backend
           uses: docker/build-push-action@v2
           with:
@@ -35,5 +28,4 @@ jobs:
             context: .
             file: docker/Dockerfile.backend
 
-        - name: Verify Pushed Image
-          run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fmj-frontend:latest
+

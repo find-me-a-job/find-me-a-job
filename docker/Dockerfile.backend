@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.20
+FROM python:3.12-alpine
 
 WORKDIR /usr/src/app
 
@@ -13,10 +13,12 @@ ENV PATH="/root/.local/bin:$PATH"
 
 RUN pip3 install poetry
 
+RUN poetry config virtualenvs.create false
+
 RUN poetry install --no-root
 
-COPY . .
+COPY ./backend/backend .
 
 EXPOSE 5000
 
-CMD [ "poetry", "run", "python3", "backend/main.py" ]
+CMD [ "gunicorn", "--bind", "0.0.0.0:5000", "wsgi:app" ]
