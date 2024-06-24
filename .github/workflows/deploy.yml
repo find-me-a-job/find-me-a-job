@@ -35,9 +35,9 @@ jobs:
             username: ${{ secrets.EC2_USERNAME }}
             key: ${{ secrets.EC2_KEY }}
             script: |
-              sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
               sudo docker stop ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend || true
               sudo docker rm ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend || true
+              sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
               sudo docker run -d --name fmj-backend -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
 
 
