@@ -7,7 +7,7 @@ function Test() {
     function handleOnClick(){
         axios({
             method:"GET",
-            url: "http://localhost:5000/api/v1/test",
+            url: "http://54.211.228.164:5000/api/v1/test",
             
         }).then((response)=>{
             setMessage(response.data)

@@ -23,7 +23,7 @@ function FieldKnown() {
         
         axios({
             method:"POST",
-            url: "http://localhost:5000/api/v1/known-field-data",
+            url: import.meta.env.VITE_SERVER_URL + "/api/v1/known-field-data",
             data:{
                 title: field,
                 location: location,
@@ -45,7 +45,7 @@ function FieldKnown() {
                 })
             }
     function handleCheckData(){
-        window.open("http://localhost:8080/fieldknown/results")
+        window.open(import.meta.env.VITE_CLOUDFRONT_URL + "/fieldknown/results")
     }
     return (
         <div className='h-screen flex items-center justify-center'>
