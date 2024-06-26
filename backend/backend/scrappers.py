@@ -13,7 +13,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     title = title.replace(" ", "%20")
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
-    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=30)
+    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=60)
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
