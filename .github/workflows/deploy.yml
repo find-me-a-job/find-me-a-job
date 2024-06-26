@@ -44,7 +44,7 @@ jobs:
         runs-on: ubuntu-latest
         env:
           BUCKET: findmeajob.info
-          DIST: build
+          DIST: ./frontend/dist
           REGION: us-east-1
           DIST_ID: EAHXMXBVYXY3L
 
@@ -57,13 +57,13 @@ jobs:
           with:
             aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
             aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: us-east-2
+            aws-region: us-east-1
 
         - name: Install dependencies
-          run: npm ci --production
+          run: npm ci --production --prefix ./frontend
 
         - name: Build
-          run: npm run build
+          run: npm run build --prefix ./frontend
         
         - name: Copy files to the aws bucket
           run: |
