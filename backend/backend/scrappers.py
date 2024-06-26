@@ -2,7 +2,7 @@ import httpx
 from selectolax.parser import HTMLParser
 import json
 
-headers = {
+headersNaukriDotCom = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
     "AppId" : "109",
     "SystemId" : "Naukri"
@@ -13,7 +13,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     title = title.replace(" ", "%20")
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
-    httpxResponse = httpx.get(testURL, headers=headers)
+    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom)
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
@@ -57,7 +57,7 @@ def scrapeInternshala(profile="", location="", experience=0):
             url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/page-{page}"
         else:
             url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/experience-{experience}/page-{page}"
-        resp = httpx.get(url, headers=headers)
+        resp = httpx.get(url)
         return HTMLParser(resp.text)
     webpage = get_html(1)
     number_of_pages = int(webpage.css_first("span#total_pages").text())
@@ -94,7 +94,7 @@ def scrapeInternshala(profile="", location="", experience=0):
         skillsNotFound = 0
         # Scrapping Skills #
         for url in listingLinks:
-            listingPage = HTMLParser(httpx.get(url, headers=headers).text)
+            listingPage = HTMLParser(httpx.get(url).text)
             # skillsExtractedRaw = listingPage.css("span.round_tabs")
             skillsRawHTML = listingPage.css("span.round_tabs")
             totalListingsVisitedForSkills += 1
