@@ -14,9 +14,9 @@ function FieldKnown() {
     const [scrappedData, setScrappedData] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [isDataReady, setIsDataReady] = useState(false);
+    
     function getScrappedDataForKnownField(field: string, location: string, experience: number){
         setIsLoading(true);
-        console.log("inside onclick function!!!!!")
         console.log(field)
         console.log(location)
         console.log(experience)
