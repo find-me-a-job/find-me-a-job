@@ -62,6 +62,9 @@ jobs:
         - name: Install dependencies
           run: npm ci --production --prefix ./frontend
 
+        - name: Install Type Declarations
+          run: npm install --save-dev @types/react-router-dom @types/d3 --prefix ./frontend
+
         - name: Build
           run: npm run build --prefix ./frontend
         
