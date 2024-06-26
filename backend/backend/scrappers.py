@@ -13,7 +13,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     title = title.replace(" ", "%20")
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
-    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=60)
+    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom)
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
@@ -184,7 +184,8 @@ def skillsAggregator(*args):
     return data
 
 def scrapeKnownField(info: dict) -> dict:
-    data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
+    # data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
+    data = scrapeInternshala(info["title"], info["location"], info["experience"])
     topSkills = sorted(data["skills"], key=data["skills"].get, reverse=True)
     data["top-skills"] = topSkills[0:10]
     topSkillsData = []
