@@ -43,7 +43,7 @@ jobs:
         name: build frontend and deploy to cloudfront
         runs-on: ubuntu-latest
         env:
-          BUCKET: findmeajob.info
+          BUCKET: fmj-frontend-bucket
           DIST: ./frontend/dist
           REGION: us-east-1
           DIST_ID: EAHXMXBVYXY3L
