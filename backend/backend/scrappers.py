@@ -185,7 +185,8 @@ def skillsAggregator(*args):
 
 def scrapeKnownField(info: dict) -> dict:
     # data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
-    data = scrapeInternshala(info["title"], info["location"], info["experience"])
+    # data = scrapeInternshala(info["title"], info["location"], info["experience"])
+    data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]))
     topSkills = sorted(data["skills"], key=data["skills"].get, reverse=True)
     data["top-skills"] = topSkills[0:10]
     topSkillsData = []
