@@ -6,7 +6,7 @@ on:
             - main
 
 jobs:
-    build-and-push-frontend:
+    backend:
         runs-on: ubuntu-latest
         steps:
         - name: Checkout repository
@@ -39,5 +39,38 @@ jobs:
               sudo docker stop fmj-backend || true
               sudo docker rm fmj-backend || true
               sudo docker run -d --name fmj-backend -p 5000:5000 ${{ secrets.DOCKERHUB_USERNAME }}/fmj-backend:latest
+    frontend:
+        name: build frontend and deploy to cloudfront
+        runs-on: ubuntu-latest
+        env:
+          BUCKET: findmeajob.info
+          DIST: build
+          REGION: us-east-1
+          DIST_ID: EAHXMXBVYXY3L
 
+        steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
 
+        - name: "Configure AWS Credentials"
+          uses: aws-actions/configure-aws-credentials@v4.0.2
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-2
+
+        - name: Install dependencies
+          run: npm ci --production
+
+        - name: Build
+          run: npm run build
+        
+        - name: Copy files to the aws bucket
+          run: |
+            aws s3 sync --delete ${{ env.DIST }} s3://${{ env.BUCKET }}
+
+        - name: Copy files to the production website
+          run: |
+            aws cloudfront create-invalidation \
+              --distribution-id ${{ env.DIST_ID }} \
+              --paths "/*"
