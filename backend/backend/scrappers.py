@@ -1,4 +1,5 @@
 import httpx
+import requests
 from selectolax.parser import HTMLParser
 import json
 
@@ -7,6 +8,15 @@ headersNaukriDotCom = {
     "AppId" : "109",
     "SystemId" : "Naukri"
 }
+
+def testScrapper():
+    titleSEOKey = "web-development"
+    location = ""
+    title = "web" + "%20" + "development"
+    experience = "0"
+    response = httpx.get(f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong=", headers = headersNaukriDotCom)
+    # response = requests.get("https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location=vadodara&keyword=web%20development&pageNo=1&experience=0&k=web%20development&l=vadodara&experience=0&seoKey=web-development-jobs-in-vadodara&src=jobsearchDesk&latLong=")
+    return response.json()
 
 def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     titleSEOKey = title.replace(" ", "-")
