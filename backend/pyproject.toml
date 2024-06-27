@@ -12,7 +12,6 @@ selectolax = "^0.3.21"
 flask = "^3.0.3"
 flask-cors = "^4.0.1"
 gunicorn = "^22.0.0"
-requests = "^2.32.3"
 
 
 [build-system]

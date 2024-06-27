@@ -4,26 +4,27 @@ from selectolax.parser import HTMLParser
 import json
 
 headersNaukriDotCom = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-    "AppId" : "109",
-    "SystemId" : "Naukri"
+    "Postman-Token": "2a1a92ef-6cb8-4afd-9aef-c619374fabc2",
+    "Cookie": "J=0; _t_ds=7fc9e31719439797-387fc9e3-07fc9e3; ak_bmsc=FE0BCD76CA64EC6D4C2FDE3E0682BC91~000000000000000000000000000000~YAAQnEU5F9PvSQ+QAQAA/0qJWhiV/rNyLpFIvLFILyQcuhzvsGacvIB8IAbWYNpehdQeoac1mkdZtodWRK9N8zEdhEAwXdYdoPzudDbrYHU6SgnDptUR/Cvqk9+HnXcJem0wKKbRLl68v63iVtphgEKAaNTyWcToZX8P/IDOUJBn5NGR3q2FewmGLVk+3v7J9x3CFlKzxvXZAXB5AExssi66NqUITHTBRxqWGQti43fNUSEWERmCwriC9Vkr+HShlIrkzYpw2+RuFzSXOEkpS1tG2PEbPKu2lJ0z7Uej/5fKaDvPCFZEX7w93eeNDftgr4mm/YDIoNypjYKMHjCTCQYsa9gWybIbhOQucKrj399rTVP7BCGJX65Me1dRhJ3cYaGrg/Vl3uPlnc+o; bm_sv=97FB75357B01A6C025C7A31B5C5CB734~YAAQH/naF1cUIk+QAQAAWIqbWhjlVSj1DwEEBYwgietiEPS79agf8sa82i++/NXMugRQcN/vRI5QUHMmgqtDstaJJe3qrqjMs3E44v7JNOT0qv96ad3FhU6L+XnIGzeJ6WFbR5O8Ay9k9Z+tWN94aQDCK6UerlJW/NJptfN6OgicI/YsgKgWjmk+avpjL8aTlTA+hfnTaXPrkZr+AOsnYHpK5FVagyyCDtcyLxdMIhViGjWNapILbHk16X++O1VI~1",
+    "User-Agent": "PostmanRuntime/7.39.0",
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Connection": "keep-alive",
+    "AppId": "109",
+    "SystemId": "Naukri",
+    "Host": "www.naukri.com"
 }
 
-def testScrapper():
-    titleSEOKey = "web-development"
-    location = ""
-    title = "web" + "%20" + "development"
-    experience = "0"
-    response = httpx.get(f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong=", headers = headersNaukriDotCom)
-    # response = requests.get("https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location=vadodara&keyword=web%20development&pageNo=1&experience=0&k=web%20development&l=vadodara&experience=0&seoKey=web-development-jobs-in-vadodara&src=jobsearchDesk&latLong=")
-    return response.json()
+normalHeaders = {
+    "User-Agent": "PostmanRuntime/7.39.0",
+}
 
 def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     titleSEOKey = title.replace(" ", "-")
     title = title.replace(" ", "%20")
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
-    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom)
+    httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=10)
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
@@ -67,7 +68,7 @@ def scrapeInternshala(profile="", location="", experience=0):
             url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/page-{page}"
         else:
             url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/experience-{experience}/page-{page}"
-        resp = httpx.get(url)
+        resp = httpx.get(url, headers=normalHeaders)
         return HTMLParser(resp.text)
     webpage = get_html(1)
     number_of_pages = int(webpage.css_first("span#total_pages").text())
@@ -104,7 +105,7 @@ def scrapeInternshala(profile="", location="", experience=0):
         skillsNotFound = 0
         # Scrapping Skills #
         for url in listingLinks:
-            listingPage = HTMLParser(httpx.get(url).text)
+            listingPage = HTMLParser(httpx.get(url, headers=normalHeaders).text)
             # skillsExtractedRaw = listingPage.css("span.round_tabs")
             skillsRawHTML = listingPage.css("span.round_tabs")
             totalListingsVisitedForSkills += 1

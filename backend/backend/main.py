@@ -1,7 +1,7 @@
 #PORT = 5000
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from scrappers import scrapeKnownField, testScrapper
+from scrappers import scrapeKnownField
 import json
 
 app = Flask(__name__)
@@ -14,8 +14,7 @@ def home():
 @app.route("/api/v1/test")
 def test():
     print("tsetprint")
-    return testScrapper()
-
+    return "hello from test"
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     info = json.loads(request.data.decode())
