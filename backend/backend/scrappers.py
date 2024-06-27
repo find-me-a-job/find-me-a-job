@@ -1,5 +1,4 @@
 import httpx
-import requests
 from selectolax.parser import HTMLParser
 import json
 
@@ -8,7 +7,6 @@ headersNaukriDotCom = {
     "Cookie": "J=0; _t_ds=7fc9e31719439797-387fc9e3-07fc9e3; ak_bmsc=FE0BCD76CA64EC6D4C2FDE3E0682BC91~000000000000000000000000000000~YAAQnEU5F9PvSQ+QAQAA/0qJWhiV/rNyLpFIvLFILyQcuhzvsGacvIB8IAbWYNpehdQeoac1mkdZtodWRK9N8zEdhEAwXdYdoPzudDbrYHU6SgnDptUR/Cvqk9+HnXcJem0wKKbRLl68v63iVtphgEKAaNTyWcToZX8P/IDOUJBn5NGR3q2FewmGLVk+3v7J9x3CFlKzxvXZAXB5AExssi66NqUITHTBRxqWGQti43fNUSEWERmCwriC9Vkr+HShlIrkzYpw2+RuFzSXOEkpS1tG2PEbPKu2lJ0z7Uej/5fKaDvPCFZEX7w93eeNDftgr4mm/YDIoNypjYKMHjCTCQYsa9gWybIbhOQucKrj399rTVP7BCGJX65Me1dRhJ3cYaGrg/Vl3uPlnc+o; bm_sv=97FB75357B01A6C025C7A31B5C5CB734~YAAQH/naF1cUIk+QAQAAWIqbWhjlVSj1DwEEBYwgietiEPS79agf8sa82i++/NXMugRQcN/vRI5QUHMmgqtDstaJJe3qrqjMs3E44v7JNOT0qv96ad3FhU6L+XnIGzeJ6WFbR5O8Ay9k9Z+tWN94aQDCK6UerlJW/NJptfN6OgicI/YsgKgWjmk+avpjL8aTlTA+hfnTaXPrkZr+AOsnYHpK5FVagyyCDtcyLxdMIhViGjWNapILbHk16X++O1VI~1",
     "User-Agent": "PostmanRuntime/7.39.0",
     "Accept": "*/*",
-    "Accept-Encoding": "gzip, deflate, br",
     "Connection": "keep-alive",
     "AppId": "109",
     "SystemId": "Naukri",
@@ -195,9 +193,7 @@ def skillsAggregator(*args):
     return data
 
 def scrapeKnownField(info: dict) -> dict:
-    # data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
-    # data = scrapeInternshala(info["title"], info["location"], info["experience"])
-    data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]))
+    data =  skillsAggregator(scrapeNaukriDotCom(info["title"], info["location"], info["experience"]), scrapeInternshala(info["title"], info["location"], info["experience"]))
     topSkills = sorted(data["skills"], key=data["skills"].get, reverse=True)
     data["top-skills"] = topSkills[0:10]
     topSkillsData = []
@@ -216,3 +212,4 @@ if __name__ == "__main__":
     data["data-science"] = skillsAggregator(scrapeNaukriDotCom("data-science", "", 0), scrapeInternshala("data_science", "", 0))
     data["cyber-security"] = skillsAggregator(scrapeNaukriDotCom("cyber-security", "", 0), scrapeInternshala("cyber-security", "", 0))
     data["cloud-computing"] = skillsAggregator(scrapeNaukriDotCom("cloud-computing", "", 0), scrapeInternshala("cloud-computing", "", 0))
+
