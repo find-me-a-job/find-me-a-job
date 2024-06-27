@@ -1,4 +1,4 @@
-name: Build and Deploy to DockerHub
+name: Build and Deploy
 
 on:
     push:
