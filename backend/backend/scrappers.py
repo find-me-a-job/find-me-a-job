@@ -29,8 +29,9 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     # return {"requestheaders": str(responseHeaders)}
     # print(type(httpxResponse.content))
     # print(httpxResponse.json())
-    print(httpxResponse.content)
-    return {}
+    httpxContent = httpxResponse.content
+
+    return {"content": httpxContent}
     # jsonResponse = httpxResponse.json()
     # if(jsonResponse["noOfJobs"] == 0):
     #     return {}
