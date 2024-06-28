@@ -24,6 +24,12 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
     httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=10)
+    responseHeaders =  httpxResponse.headers
+    # print(type(responseHeaders))
+    return {"requestheaders": str(responseHeaders)}
+    # print(type(httpxResponse.content))
+    # print(httpxResponse.json())
+    return
     jsonResponse = httpxResponse.json()
     if(jsonResponse["noOfJobs"] == 0):
         return {}
