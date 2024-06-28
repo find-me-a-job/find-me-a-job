@@ -24,46 +24,47 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     
     testURL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
     httpxResponse = httpx.get(testURL, headers=headersNaukriDotCom, timeout=10)
-    responseHeaders =  httpxResponse.headers
+    # responseHeaders =  httpxResponse.headers
     # print(type(responseHeaders))
-    return {"requestheaders": str(responseHeaders)}
+    # return {"requestheaders": str(responseHeaders)}
     # print(type(httpxResponse.content))
     # print(httpxResponse.json())
-    return
-    jsonResponse = httpxResponse.json()
-    if(jsonResponse["noOfJobs"] == 0):
-        return {}
-    print(jsonResponse["jobDetails"])
-    returnData = {
-                "skills": {},
-            }
-    jobDetails = jsonResponse["jobDetails"]
-    skills = []
-    sumOfSalaries = 0
-    numberOfSalariesCalculated = 0
-    for jobDetail in jobDetails:
-        try:
-            #skills
-            skills = jobDetail["tagsAndSkills"].lower().split(",")
-            for skill in skills:
-                incrementValueOfKey(returnData["skills"], skill)
-            #average-salary
-            salary = jobDetail["placeholders"][1]["label"]
-            if salary != "Not disclosed":
-                print(salary)
-                salary = float(salary[salary.index("-") + 1 : -8].strip())
+    print(httpxResponse.content)
+    return {}
+    # jsonResponse = httpxResponse.json()
+    # if(jsonResponse["noOfJobs"] == 0):
+    #     return {}
+    # print(jsonResponse["jobDetails"])
+    # returnData = {
+    #             "skills": {},
+    #         }
+    # jobDetails = jsonResponse["jobDetails"]
+    # skills = []
+    # sumOfSalaries = 0
+    # numberOfSalariesCalculated = 0
+    # for jobDetail in jobDetails:
+    #     try:
+    #         #skills
+    #         skills = jobDetail["tagsAndSkills"].lower().split(",")
+    #         for skill in skills:
+    #             incrementValueOfKey(returnData["skills"], skill)
+    #         #average-salary
+    #         salary = jobDetail["placeholders"][1]["label"]
+    #         if salary != "Not disclosed":
+    #             print(salary)
+    #             salary = float(salary[salary.index("-") + 1 : -8].strip())
 
-                sumOfSalaries += salary
-                numberOfSalariesCalculated += 1
+    #             sumOfSalaries += salary
+    #             numberOfSalariesCalculated += 1
 
-        except KeyError as err:
-            continue
-    if(numberOfSalariesCalculated == 0):
-        returnData["average-salary"] = 0
-    else:
-        returnData["average-salary"] = sumOfSalaries / numberOfSalariesCalculated
+    #     except KeyError as err:
+    #         continue
+    # if(numberOfSalariesCalculated == 0):
+    #     returnData["average-salary"] = 0
+    # else:
+    #     returnData["average-salary"] = sumOfSalaries / numberOfSalariesCalculated
     
-    return returnData
+    # return returnData
 
 def scrapeInternshala(profile="", location="", experience=0):
     profile = profile.replace(" ", "-")
