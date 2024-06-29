@@ -24,7 +24,8 @@ def data():
 @app.route("/api/v1/naukri", methods=["POST"])
 def naukriData():
     info = json.loads(request.data.decode())
-    return jsonify(scrapeNaukriDotCom(title=info["title"], location=info["location"], experience=info["experience"]))
+    retObject = jsonify(scrapeNaukriDotCom(title=info["title"], location=info["location"], experience=info["experience"]))
+    return retObject
 
 if __name__ == "__main__":
     app.run(host= "0.0.0.0", port=5000, debug=True)
