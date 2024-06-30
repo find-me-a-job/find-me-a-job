@@ -2,12 +2,21 @@ import httpx
 from selectolax.parser import HTMLParser
 import json
 
-headers = {
-    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36",
-    "AppId" : "109",
-    "SystemId" : "Naukri"
+headersNaukriDotCom = {
+    "Postman-Token": "2a1a92ef-6cb8-4afd-9aef-c619374fabc2",
+    "Cookie": "J=0; _t_ds=7fc9e31719439797-387fc9e3-07fc9e3; ak_bmsc=FE0BCD76CA64EC6D4C2FDE3E0682BC91~000000000000000000000000000000~YAAQnEU5F9PvSQ+QAQAA/0qJWhiV/rNyLpFIvLFILyQcuhzvsGacvIB8IAbWYNpehdQeoac1mkdZtodWRK9N8zEdhEAwXdYdoPzudDbrYHU6SgnDptUR/Cvqk9+HnXcJem0wKKbRLl68v63iVtphgEKAaNTyWcToZX8P/IDOUJBn5NGR3q2FewmGLVk+3v7J9x3CFlKzxvXZAXB5AExssi66NqUITHTBRxqWGQti43fNUSEWERmCwriC9Vkr+HShlIrkzYpw2+RuFzSXOEkpS1tG2PEbPKu2lJ0z7Uej/5fKaDvPCFZEX7w93eeNDftgr4mm/YDIoNypjYKMHjCTCQYsa9gWybIbhOQucKrj399rTVP7BCGJX65Me1dRhJ3cYaGrg/Vl3uPlnc+o; bm_sv=97FB75357B01A6C025C7A31B5C5CB734~YAAQH/naF1cUIk+QAQAAWIqbWhjlVSj1DwEEBYwgietiEPS79agf8sa82i++/NXMugRQcN/vRI5QUHMmgqtDstaJJe3qrqjMs3E44v7JNOT0qv96ad3FhU6L+XnIGzeJ6WFbR5O8Ay9k9Z+tWN94aQDCK6UerlJW/NJptfN6OgicI/YsgKgWjmk+avpjL8aTlTA+hfnTaXPrkZr+AOsnYHpK5FVagyyCDtcyLxdMIhViGjWNapILbHk16X++O1VI~1",
+    "User-Agent": "PostmanRuntime/7.39.0",
+    "Accept": "*/*",
+    "Accept-Encoding": "gzip",
+    "Connection": "keep-alive",
+    "AppId": "109",
+    "SystemId": "Naukri",
+    "Host": "www.naukri.com"
 }
 
+normalHeaders = {
+    "User-Agent": "PostmanRuntime/7.39.0",
+}
 def incrementValueOfKey(dict, key):
     if key in dict:
         dict[key] += 1
@@ -21,7 +30,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     title = title.replace(" ", "%20")
     
     URL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo=1&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
-    httpxResponse = httpx.get(URL, headers=headers)
+    httpxResponse = httpx.get(URL, headers=headersNaukriDotCom)
     jsonResponse = httpxResponse.json()
     numberOfJobs = int(jsonResponse["noOfJobs"])
     # if numberOfJobs == int("O"):
@@ -37,7 +46,7 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
         print(page)
         URL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo={page}&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
         
-        httpxResponse = httpx.get(URL, headers=headers)
+        httpxResponse = httpx.get(URL, headers=headersNaukriDotCom)
         jsonResponse = httpxResponse.json()
         jobDetails = jsonResponse["jobDetails"]
 
@@ -100,7 +109,7 @@ def scrapeInternshala(profile="", location="", experience=0):
             url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/page-{page}"
             
         else:
-            url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/experience-{experience}/page-{page}"
+            url = f"https://internshala.com/jobs/{profile}-jobs-in-{location}/experience-{experience}/page-{page}"
         resp = httpx.get(url, headers=normalHeaders)
         return HTMLParser(resp.text)
     webpage = get_html(1)
@@ -207,11 +216,133 @@ def scrapeInternshala(profile="", location="", experience=0):
     
     return returnData
 
+def scrapeInternshalaListingData(profile="", location="", experience=0, type=""):
+    jsonData = []
+    profile = profile.replace(" ", "-")
+    
+    def get_html(page):
+        url = ""
+        if type == "job":
+            if(experience == 0):
+                url = f"https://internshala.com/fresher-jobs/{profile}-jobs-in-{location}/page-{page}"
+            else:
+                url = f"https://internshala.com/jobs/{profile}-jobs-in-{location}/experience-{experience}/page-{page}"
+        elif type == "internship":
+            url = f"https://internshala.com/internships/{profile}-internship-in-{location}/page-{page}"
+        resp = httpx.get(url)
+        return HTMLParser(resp.text)
+    
+    webpage = get_html(1)
+    number_of_pages = int(webpage.css_first("span#total_pages").text())
 
+    for page_number in range(1, number_of_pages):
+        print("page", page_number, "/", number_of_pages)
+        webpage = get_html(page_number)
+        listingCards = webpage.css_first(f"#internship_list_container_{page_number}")
+        listingCards = listingCards.iter()
+        listingLinks = []
 
+        for listingCard in listingCards:
+            try:
+                listingLinks.append("https://internshala.com" + listingCard.attributes['data-href'] + '/')
+            except KeyError:
+                print(KeyError, "data-href attribute was not found in listing div")
+                continue
 
+        totalListingsVisitedForSkills = 0
+        skillsNotFound = 0
+
+        for url in listingLinks:
+            listingData = {
+                "title": "",
+                "skills": [],
+                "url": "",
+                "salary": 0,
+                "type": type
+            }
+            listingPage = HTMLParser(httpx.get(url).text)
+            print(url)
+            return
+
+            # URL #
+            listingData["url"] = url
+            
+            # Title #
+            listingData["title"] = listingPage.css_first("#details_container > h1").text().strip()
+
+            # Skills #
+            skillsHTML = listingPage.css("span.round_tabs")
+            totalListingsVisitedForSkills += 1
+
+            if(len(skillsHTML) == 0):
+                print("Listing had no listed skills")
+                skillsNotFound += 1
+                continue
+
+            listingData["skills"] = list(map(lambda x: x.text().strip().lower(), skillsHTML))
+            # Salary #
+            if type == "job":
+                with open("html.html" , "w+") as f:
+                    f.write(listingPage.text())
+                    print(listingPage.text())
+                
+                salaryHTML = listingPage.css_first("span.desktop")
+                salaryStr = salaryHTML.text().strip()
+
+                if(salaryStr == "Competitive salary"):
+                    continue
+
+                salaryStr = salaryStr[2:]
+                endIndexForFirstNumber = len(salaryStr)
+                startIndexForSecondNumber = len(salaryStr)
+                secondNumber = 0
+                divideFactor = 2
+
+                try:
+                    endIndexForFirstNumber = salaryStr.index("-")
+                    startIndexForSecondNumber = endIndexForFirstNumber + 2
+                    secondNumber = int(salaryStr[startIndexForSecondNumber:].strip().replace(",", ""))
+                except ValueError as e:
+                    divideFactor = 1
+
+                firstNumber = int(salaryStr[0:endIndexForFirstNumber].strip().replace(",", ""))
+                listingData["salary"] = (firstNumber + secondNumber) // divideFactor
+            elif type == "internship":
+                salaryHTML = listingPage.css_first(".stipend")
+                salaryStr = salaryHTML.text().strip()
+
+                if(salaryStr == "Competitive salary"):
+                    continue
+
+                salaryStr = salaryStr[2:]
+                endIndexForFirstNumber = len(salaryStr)
+                startIndexForSecondNumber = len(salaryStr)
+                secondNumber = 0
+                divideFactor = 2
+
+                try:
+                    endIndexForFirstNumber = salaryStr.index("-")
+                    startIndexForSecondNumber = endIndexForFirstNumber + 2
+                    secondNumber = int(salaryStr[startIndexForSecondNumber:].strip().replace(",", ""))
+                except ValueError as e:
+                    divideFactor = 1
+
+                firstNumber = int(salaryStr[0:endIndexForFirstNumber].strip().replace(",", ""))
+                listingData["salary"] = (firstNumber + secondNumber) // divideFactor
+
+            jsonData.append(listingData)
+
+    return jsonData
+
+def scrapeInternshalaJobsAndInternships(profile="", location="", experience=0):
+    profile = profile.replace(" ", "-")
+    jsonData = []
+    jsonData.append(scrapeInternshalaListingData(profile, location, experience, type="job"))
+    jsonData.append(scrapeInternshalaListingData(profile, location, experience, type="internship"))
+    return jsonData
 
 if __name__ == "__main__":
     # print(scrapeNaukriDotCom(title = "data science analyst", location="", experience=""))
     # print(listings)
-    scrapeInternshala(profile="data science", location="", experience=0)
+    with open("jsonData.json", "w+") as f:
+        f.write(str(scrapeInternshalaJobsAndInternships(profile="data science", location="", experience=0)))
