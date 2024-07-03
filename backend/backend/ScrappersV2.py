@@ -36,18 +36,17 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
         URL = f"https://www.naukri.com/jobapi/v3/search?noOfResults=20&urlType=search_by_key_loc&searchType=adv&location={location}&keyword={title}&pageNo={page}&experience={experience}&k={title}&l={location}&experience={experience}&seoKey={titleSEOKey}-jobs-in-{location}&src=jobsearchDesk&latLong="
         
         
-        try:
-            httpxResponse = httpx.get(URL, headers=headers, timeout=0.001)
-        except httpx.TimeoutException as e:
-            print('gottem')
+        # try:
+        #     httpxResponse = httpx.get(URL, headers=headers, timeout=0.001)
+        # except httpx.TimeoutException as e:
+        #     print('gottem')
 
 
-        # httpxResponse = httpx.get(URL, headers=headers)
+        httpxResponse = httpx.get(URL, headers=headers)
         jsonResponse = httpxResponse.json()
         jobDetails = jsonResponse["jobDetails"]
 
         for jobDetail in jobDetails:
-            tempListing = {}
             try:
                 
                 # tempListing['jobTitle'] = jobDetail["title"]
