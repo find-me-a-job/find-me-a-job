@@ -322,6 +322,7 @@ def scrapeKnownField(info: dict) -> dict:
         tempDict["value"] = data["skills"][topSkills[i]]
         topSkillsData.append(tempDict)
     data["top-skills-data"] = topSkillsData
+    # print(data)
     return data
 
 if __name__ == "__main__":
@@ -331,4 +332,4 @@ if __name__ == "__main__":
     # data["cyber-security"] = skillsAggregator(scrapeNaukriDotCom("cyber-security", "", 0), scrapeInternshala("cyber-security", "", 0))
     # data["cloud-computing"] = skillsAggregator(scrapeNaukriDotCom("cloud-computing", "", 0), scrapeInternshala("cloud-computing", "", 0))
 
-    scrapeInternshala("web development")
+    pass

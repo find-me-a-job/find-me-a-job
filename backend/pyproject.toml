@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "deep"
+name = "fmj"
 version = "0.1.0"
 description = ""
 authors = ["deep-kumawat <deepdkmail@gmail.com>"]

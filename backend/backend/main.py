@@ -19,7 +19,10 @@ def test():
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     info = json.loads(request.data.decode())
-    return jsonify(scrapeKnownField(info))
+    data = scrapeKnownField(info)
+    print("=======================================")
+    print(data)
+    return jsonify(data)
 
 @app.route("/api/v1/naukri", methods=["POST"])
 def naukriData():

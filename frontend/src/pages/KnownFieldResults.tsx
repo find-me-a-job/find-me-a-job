@@ -13,7 +13,7 @@ function KnownFieldResults() {
       <h1 className="mb-4 text-xl font-bold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-white">
         Average Salary = {data["average-salary"]}
       </h1>
-      <Barchart />
+      {/* <Barchart /> */}
     </div>
   )
 }
