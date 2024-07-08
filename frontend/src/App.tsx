@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Home from './pages/Home'
 import FieldKnown from "./pages/FieldKnown"
 import FieldUnknown from "./pages/FieldUnknown"
-import KnownFieldResults from "./pages/KnownFieldResults"
+import KnownFieldResults from "./components/KnownFieldResults"
 import Test from "./pages/Test"
 function App() {
 

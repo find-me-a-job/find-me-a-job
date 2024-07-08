@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react"
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Input } from "@/components/ui/input"
-
+import KnownFieldResults from "../components/KnownFieldResults"
+import ToggleView from "./ToggleView"
 
 function FieldKnown() {
     const [field, setField] = useState("web devlopment");
@@ -44,53 +45,60 @@ function FieldKnown() {
                 console.log(e)
                 })
             }
+    
     function handleCheckData(){
-        window.open(import.meta.env.VITE_CLOUDFRONT_URL + "/fieldknown/results")
+        window.open(import.meta.env.VITE_CLOUDFRONT_URL + "/fieldknown/results", "_self")
     }
+
     return (
         <div className='h-screen flex items-center justify-center'>
-            <Card>
-                <CardContent>
-                    <div className='flex items-center h-full justify-center'>
-                        <div className='space-y-4 p-4 w-[26rem]'>
-                            <div>
-                                <Label>Field</Label>
-                                <Input placeholder="Web development" onChange={(e) => setField(e.target.value)} />
-                            </div>
-                            <div>
-                                <Label>Location</Label>
-                                <Input placeholder="Vadodara" onChange={(e) => setLocation(e.target.value)} />
-                            </div>
-                            <div>
-                                <Label>Experience</Label>
-                                <Input type="number" placeholder="0"  onChange={(e) => setExperience(parseInt(e.target.value))} />
-                            </div>
-                            {(isLoading) ? 
-                                <div className="">
-                                    <Button disabled className='w-full my-2' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
-                                        <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
-                                        <span>Search</span>
-                                    </Button>
-                                    
-                                </div>
-                                 : 
+            <ToggleView display={!isDataReady}>
+                <Card>
+                    <CardContent>
+                        <div className='flex items-center h-full justify-center'>
+                            <div className='space-y-4 p-4 w-[26rem]'>
                                 <div>
-                                    {(isDataReady) ? 
-                                        <Button className="w-full" onClick={handleCheckData}>
-                                            <span>Check Data</span>
-                                        </Button> : <div>
-                                        <Button className='w-full' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
+                                    <Label>Field</Label>
+                                    <Input placeholder="Web development" onChange={(e) => setField(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Location</Label>
+                                    <Input placeholder="Vadodara" onChange={(e) => setLocation(e.target.value)} />
+                                </div>
+                                <div>
+                                    <Label>Experience</Label>
+                                    <Input type="number" placeholder="0"  onChange={(e) => setExperience(parseInt(e.target.value))} />
+                                </div>
+                                {(isLoading) ? 
+                                    <div className="">
+                                        <Button disabled className='w-full my-2' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin"/>
                                             <span>Search</span>
                                         </Button>
-                                        </div>
-                                    }
-                                </div>
-                            }
-                            
+                                        
+                                    </div>
+                                    : 
+                                    <div>
+                                        {(isDataReady) ? 
+                                            <Button className="w-full" onClick={handleCheckData}>
+                                                <span>Check Data</span>
+                                            </Button> : <div>
+                                            <Button className='w-full' onClick={()=>getScrappedDataForKnownField(field, location, experience)}>
+                                                <span>Search</span>
+                                            </Button>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                                
+                            </div>
                         </div>
-                    </div>
-                </CardContent>
-            </Card>
+                    </CardContent>
+                </Card>
+            </ToggleView>
+            <ToggleView display={isDataReady}>
+                <KnownFieldResults></KnownFieldResults>
+            </ToggleView>
         </div>
     )
 }

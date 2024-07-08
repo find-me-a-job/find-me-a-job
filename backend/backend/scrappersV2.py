@@ -23,7 +23,6 @@ def incrementValueOfKey(dict, key):
     else:
         dict[key] = 1
 
-listings = []
 
 def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     titleSEOKey = title.replace(" ", "-")
@@ -33,14 +32,9 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
     httpxResponse = httpx.get(URL, headers=headersNaukriDotCom)
     jsonResponse = httpxResponse.json()
     numberOfJobs = int(jsonResponse["noOfJobs"])
-    # if numberOfJobs == int("O"):
-    #     return {}
     noOfPages = numberOfJobs//20
-    returnData = {
-                "skills": {},
-            }
-    sumOfSalaries = 0
-    numberOfSalariesCalculated = 0
+    listings = []
+    fieldKnownData = {}
 
     for page in range(1,noOfPages+1):
         print(page)
@@ -51,16 +45,16 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
         jobDetails = jsonResponse["jobDetails"]
 
         for jobDetail in jobDetails:
-            tempListing = {}
+            listingData = []
             try:
                 
-                tempListing['jobTitle'] = jobDetail["title"]
-                tempListing["skills"] = jobDetail["tagsAndSkills"].lower().split(",")
-                tempListing["jobDetailURL"] = jobDetail["jdURL"]
-                tempListing["salary"] = jobDetail["placeholders"][1]["label"]
-                tempListing["type"] = "job"
+                listingData.append(jobDetail["title"])
+                listingData.append(jobDetail["tagsAndSkills"].lower().split(","))
+                listingData.append(jobDetail["jdURL"])
+                listingData.append(jobDetail["placeholders"][1]["label"])
+                listingData.append("job")
 
-                listings.append(tempListing)
+                listings.append(listingData)
                 # for skill in skills:
                 #     incrementValueOfKey(returnData["skills"], skill)
                 #average-salary
@@ -84,14 +78,14 @@ def scrapeNaukriDotCom(title: str, location: str, experience: int) -> list:
                 #     sumOfSalaries += salary
                 #     numberOfSalariesCalculated += 1
 
-            except KeyError as err:
+            except KeyError:
                 continue
         # if(numberOfSalariesCalculated == 0):
         #     returnData["average-salary"] = 0
         # else:
         #     returnData["average-salary"] = sumOfSalaries / numberOfSalariesCalculated
     
-    return returnData
+    return {"df-data": listings, "known-field-data": fieldKnownData}
 
 # tempListing['jobTitle'] = jobDetail["title"]
 # tempListing["skills"] = jobDetail["tagsAndSkills"].lower().split(",")
@@ -345,4 +339,4 @@ if __name__ == "__main__":
     # print(scrapeNaukriDotCom(title = "data science analyst", location="", experience=""))
     # print(listings)
     with open("jsonData.json", "w+") as f:
-        f.write(str(scrapeInternshalaJobsAndInternships(profile="data science", location="", experience=0)))
+        f.write(str(scrapeNaukriDotCom(title="data science", location="", experience=0)))

@@ -1,7 +1,8 @@
 #PORT = 5000
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from scrappers import scrapeKnownField, scrapeNaukriDotCom
+# from scrappers import scrapeKnownField, scrapeNaukriDotCom
+from scrappersV2 import scrapeNaukriDotCom
 import json
 
 app = Flask(__name__)
@@ -19,12 +20,18 @@ def test():
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     info = json.loads(request.data.decode())
-    data = scrapeKnownField(info)
+    data = scrapeNaukriDotCom(info)
     print("=======================================")
     print(data)
     return jsonify(data)
 
-@app.route("/api/v1/naukri", methods=["POST"])
+# @app.route("/api/v2/known-field-data", methods=["POST"])
+# def data():
+#     # V2
+#     # New logic for new data format for known field
+#     pass
+
+@app.route("/api/v1/naukridotcom-data", methods=["POST"])
 def naukriData():
     info = json.loads(request.data.decode())
     retObject = jsonify(scrapeNaukriDotCom(title=info["title"], location=info["location"], experience=info["experience"]))
