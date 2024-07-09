@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form with Enhanced Dropdowns</title>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <title>Field Selection</title>
     <style>
         body {
             display: flex;
@@ -16,112 +15,41 @@
             font-family: Arial, sans-serif;
         }
         .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        .option-card {
             background-color: #ffffff;
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 300px;
-        }
-        .dropdown, .number-input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 20px 0;
-            border: none;
-            border-radius: 10px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
+            width: 200px;
             cursor: pointer;
+            transition: transform 0.2s;
         }
-        .submit-btn:hover {
-            background-color: #45a049;
+        .option-card:hover {
+            transform: scale(1.05);
         }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+        .option-card h3 {
+            margin: 10px 0;
+        }
+        .option-card p {
+            color: #555;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="nav-item">
-            <label for="field">Field:</label>
-            <select id="field" class="dropdown">
-                <option value="web_dev">Web Development</option>
-                <option value="data_sci">Data Science</option>
-                <option value="cloud_eng">Cloud Engineering</option>
-                <option value="cyber_sec">Cyber Security</option>
-            </select>
+        <div class="option-card" onclick="location.href='knownField.html'">
+            <h3>Field Known</h3>
+            <p>You know the field you are interested in and you want to know which skills are the most in-demand for that field.</p>
         </div>
-        <div class="nav-item">
-            <label for="cities">Cities:</label>
-            <select id="cities" class="dropdown" multiple="multiple" style="width: 100%;">
-                <option value="new_york">New York</option>
-                <option value="vadodara">Vadodara</option>
-                <option value="ahmedabad">Ahmedabad</option>
-                <option value="gandhinagar">Gandhinagar</option>
-                <option value="surat">Surat</option>
-                <option value="pune">Pune</option>
-                <option value="mumbai">Mumbai</option>
-                <option value="bangalore">Banglaore</option>
-                <option value="delhi">Delhi</option>
-                <option value="hyderabad">Hyderabad</option>
-                <option value="indore">Indore</option>
-            </select>
-        </div>
-        <div class="nav-item">
-            <label for="experience">Experience (years):</label>
-            <input type="number" id="experience" class="number-input" min="0" placeholder="Enter experience">
-        </div>
-        <div class="nav-item">
-            <button class="submit-btn" onclick="handleSaveSubmit()">Save and Submit</button>
+        <div class="option-card" onclick="location.href='unknownField.html'">
+            <h3>Field Unknown</h3>
+            <p>You don't know your field; that's why you want to research which field would be best for you.</p>
         </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            $('#cities').select2({
-                placeholder: "Select cities",
-                allowClear: true
-            });
-        });
-
-        function handleSaveSubmit() {
-            const field = document.getElementById('field').value;
-            const cities = $('#cities').val();
-            const experience = document.getElementById('experience').value;
-
-            const data = {
-                field: field,
-                cities: cities,
-                experience: experience
-            };
-
-            $.ajax({
-                url: '/submit',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify(data),
-                success: function(response) {
-                    alert(response);
-                },
-                error: function(error) {
-                    alert('Error: ' + error.responseText);
-                }
-            });
-        }
-    </script>
 </body>
 </html>
