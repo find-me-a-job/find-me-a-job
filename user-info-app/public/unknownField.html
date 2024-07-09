@@ -54,12 +54,28 @@
             <option value="comb2" disabled>App,web,ios,android</option>
             <option value="comb3" disabled>DA,DS,ML,AI</option>
         </select>
+        
         <label for="sites">Sites:</label>
         <select id="sites" class="dropdown" multiple>
             <option value="site1">Naukri.com</option>
             <option value="site2">Internshala</option>
             <option value="site3" disabled>Linkedin</option>
         </select>
+        
+        <label for="cities">Cities:</label>
+        <select id="cities" class="dropdown" multiple>
+            <option value="vadodara">Vadodara</option>
+            <option value="ahmedabad">Ahmedabad</option>
+            <option value="gandhinagar">Gandhinagar</option>
+            <option value="surat">Surat</option>
+            <option value="pune">Pune</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="bangalore">Banglaore</option>
+            <option value="delhi">Delhi</option>
+            <option value="hyderabad">Hyderabad</option>
+            <option value="indore">Indore</option>
+        </select>
+        
         <button class="submit-btn" onclick="handleSubmit()">Submit</button>
     </div>
 
@@ -71,12 +87,17 @@
                 placeholder: "Select sites",
                 allowClear: true
             });
+            $('#cities').select2({
+                placeholder: "Select cities",
+                allowClear: true
+            });
         });
 
         function handleSubmit() {
             const combination = document.getElementById('combinations').value;
             const sites = $('#sites').val();
-            alert(`Selected Combination: ${combination}, Selected Sites: ${sites.join(', ')}`);
+            const cities = $('#cities').val();
+            alert(`Selected Combination: ${combination}, Selected Sites: ${sites.join(', ')}, Selected Cities: ${cities.join(', ')}`);
         }
     </script>
 </body>
