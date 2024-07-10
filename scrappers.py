@@ -32,7 +32,14 @@ class user_data():
 listings = []
 
 def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
-    location = location[0]
+    # Prepare location for URL
+    if len(location) > 1:
+        location_str = "%2C%20".join(location)
+        
+    else:
+        location_str = location[0]
+
+    location = location_str
     titleSEOKey = title.replace(" ", "-")
     title = title.replace(" ", "%20")
     
@@ -73,7 +80,8 @@ def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
                 listings.append(tempList)
             except KeyError as err:
                 continue
-        
+    with open("jsondata.json", "w+") as f:
+        f.write(str(listings))
     return listings
 
 if __name__ == "__main__":

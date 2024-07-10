@@ -21,7 +21,9 @@ def test():
 def data():
     info = json.loads(request.data.decode())
     print(f"info: {info}")
-    data = scrapeNaukriDotCom(info["title"], info["location"], info["experience"])
+    data = scrapeNaukriDotCom(info["title"], info["saved_location_list"], info["experience"])
+    with open("NaukriDotComResponse.json", "w+") as f:
+        f.write(str(data))
     print(f"==================DATA: {data}=====================")
     # print(data)
     return jsonify(data)
@@ -39,4 +41,4 @@ def naukriData():
     return retObject
 
 if __name__ == "__main__":
-    app.run(host= "0.0.0.0", port=5000, debug=True)
+    app.run(host= "0.0.0.0", port=4000, debug=True)

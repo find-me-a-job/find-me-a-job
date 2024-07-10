@@ -103,11 +103,11 @@
             const experience = document.getElementById('experience').value;
             // alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
             // fetch("http://localhost:5000/api/v1/known-field-data", {
-            fetch("http://localhost:5000/api/v1/known-field-data", {
+            fetch("http://localhost:4000/api/v1/known-field-data", {
                 method: "POST",
                 body: JSON.stringify({
                     title: field,
-                    location: cities,
+                    saved_location_list : cities,
                     experience: experience
                 })
             })
