@@ -9,9 +9,8 @@ def dataCleaning():
 
 
     def convert_and_return_avg_in_lakhs(value):
-# function that extract value from salary string and return the average in LPA
+    # function that extract value from salary string and return the average in LPA
 
-        
         try:
             #for range which has both thousands and lacks
             if ',' in value and ('Lac' in value or 'Lacs' in value):
@@ -94,10 +93,10 @@ def dataCleaning():
         except:
             return value
         
-        df['Average Salary (Lacs PA)'] = df['salary'].apply(convert_and_return_avg_in_lakhs)
+    df['Average Salary (Lacs PA)'] = df['salary'].apply(convert_and_return_avg_in_lakhs)
 
 
-    # it only consiters the numeric and replace rest with None and then it calculates the mean salary or average salary
+        # it only consiters the numeric and replace rest with None and then it calculates the mean salary or average salary
     average_salary = pd.to_numeric(df["Average Salary (Lacs PA)"], errors='coerce').mean() 
 
 
@@ -116,11 +115,16 @@ def dataCleaning():
     #sorting the skill dictionary in decresing order to frequency of the skills
     sorted_skills = dict(sorted(skills.items(), key=lambda item: item[1], reverse=True))
     
-    sorted_skill_list = []
+    skill_list = []
+    value_list = []
 
     for key, value in sorted_skills.items():
-        sorted_skill_list.append({"skill":key,"value": value})
+        skill_list.append(key)
+        value_list.append(value)
+    
+    #this dict contains 2 key value pair each value is a tuple of all the skill and its corresponding
+    skill_value_dict = {"skills" : tuple(skill_list),"values" : tuple(value_list)}
 
-    return sorted_skill_list
+    return skill_value_dict
 
     

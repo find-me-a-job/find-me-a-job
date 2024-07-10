@@ -83,7 +83,7 @@ def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
                 continue
     with open("data", "wb") as fp:   #Pickling
         pickle.dump(listings, fp)
-    return "Scrapin done"
+    return listings
 
 if __name__ == "__main__":
     

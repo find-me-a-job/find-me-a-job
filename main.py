@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from scrappers import scrapeNaukriDotCom
+from dataCleaning import dataCleaning
 # from scrappersV2 import scrapeNaukriDotCom
 import json
 
@@ -25,8 +26,9 @@ def data():
     with open("NaukriDotComResponse.json", "w+") as f:
         f.write(str(data))
     print(f"==================DATA: {data}=====================")
+    cleanedData = dataCleaning()
     # print(data)
-    return jsonify(data)
+    return jsonify(cleanedData)
 
 # @app.route("/api/v2/known-field-data", methods=["POST"])
 # def data():
