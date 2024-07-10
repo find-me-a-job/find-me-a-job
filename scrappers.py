@@ -29,9 +29,10 @@ class user_data():
         else:
             self.location_str = self.location[0]
 
-listings = []
 
 def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
+    listings = []
+
     # Prepare location for URL
     if len(location) > 1:
         location_str = "%2C%20".join(location)
@@ -80,9 +81,9 @@ def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
                 listings.append(tempList)
             except KeyError as err:
                 continue
-    with open("jsondata.json", "w+") as f:
-        f.write(str(listings))
-    return listings
+    with open("data", "wb") as fp:   #Pickling
+        pickle.dump(listings, fp)
+    return "Scrapin done"
 
 if __name__ == "__main__":
     
