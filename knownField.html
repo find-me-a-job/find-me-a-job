@@ -57,10 +57,10 @@
         <div class="nav-item">
             <label for="field">Field:</label>
             <select id="field" class="dropdown">
-                <option value="web_dev">Web Development</option>
-                <option value="data_sci">Data Science</option>
-                <option value="cloud_eng">Cloud Engineering</option>
-                <option value="cyber_sec">Cyber Security</option>
+                <option value="web development">Web Development</option>
+                <option value="data science">Data Science</option>
+                <option value="cloud engineering">Cloud Engineering</option>
+                <option value="cyber security">Cyber Security</option>
             </select>
         </div>
         <div class="nav-item">
@@ -101,7 +101,19 @@
             const field = document.getElementById('field').value;
             const cities = $('#cities').val();
             const experience = document.getElementById('experience').value;
-            alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
+            // alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
+            // fetch("http://localhost:5000/api/v1/known-field-data", {
+            fetch("http://localhost:5000/api/v1/known-field-data", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: field,
+                    location: cities,
+                    experience: experience
+                })
+            })
+            .then((responseData) => responseData.json())
+            .then((responseDataJson) => console.log(responseDataJson))
+            .catch()
         }
     </script>
 </body>

@@ -1,28 +1,29 @@
 #PORT = 5000
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-from scrappers import scrapeKnownField, scrapeNaukriDotCom
+from scrappers import scrapeNaukriDotCom
 # from scrappersV2 import scrapeNaukriDotCom
 import json
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app)
 
 @app.route("/")
 def home():
     return "home"
 
-@app.route("/api/v1/test")
+@app.route("/api/v1/test", methods=["GET", "POST"])
 def test():
-    print("tsetprint")
-    return "hello from test"
+    print("testprint")
+    return jsonify({"message": "this is a test message"})
 
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     info = json.loads(request.data.decode())
-    data = scrapeKnownField(info)
-    print("=======================================")
-    print(data)
+    print(f"info: {info}")
+    data = scrapeNaukriDotCom(info["title"], info["location"], info["experience"])
+    print(f"==================DATA: {data}=====================")
+    # print(data)
     return jsonify(data)
 
 # @app.route("/api/v2/known-field-data", methods=["POST"])

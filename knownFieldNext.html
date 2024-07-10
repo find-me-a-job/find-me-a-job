@@ -93,6 +93,18 @@
             const cities = $('#cities').val();
             const experience = document.getElementById('experience').value;
             alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
+            fetch("http://localhost:5000/api/v1/known-field-data", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: field,
+                    location: cities,
+                    experience: experience
+                })
+            })
+            .then((data)=>{
+                console.log(data.json())
+            })
+            .catch()
         }
     </script>
 </body>
