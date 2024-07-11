@@ -59,57 +59,58 @@
   <body>
     <!-- Load d3.js -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <div class="container">
-      <div class="nav-item">
-        <label for="field">Field:</label>
-        <select id="field" class="dropdown">
-          <option value="web development">Web Development</option>
-          <option value="data science">Data Science</option>
-          <option value="cloud engineering">Cloud Engineering</option>
-          <option value="cyber security">Cyber Security</option>
-        </select>
-      </div>
-      <div class="nav-item">
-        <label for="cities">Cities:</label>
-        <select
-          id="cities"
-          class="dropdown"
-          multiple="multiple"
-          style="width: 100%"
-        >
-          <option value="vadodara">Vadodara</option>
-          <option value="ahmedabad">Ahmedabad</option>
-          <option value="gandhinagar">Gandhinagar</option>
-          <option value="surat">Surat</option>
-          <option value="pune">Pune</option>
-          <option value="mumbai">Mumbai</option>
-          <option value="bangalore">Banglaore</option>
-          <option value="delhi">Delhi</option>
-          <option value="hyderabad">Hyderabad</option>
-          <option value="indore">Indore</option>
-        </select>
-      </div>
-      <div class="nav-item">
-        <label for="experience">Experience (years):</label>
-        <input
-          type="number"
-          id="experience"
-          class="number-input"
-          min="0"
-          placeholder="Enter experience"
-        />
-      </div>
-      <div class="nav-item">
-        <button class="submit-btn" onclick="handleSaveSubmit()">
-          Save and Submit
-        </button>
+    <div id="main-container">
+      <div class="container">
+        <div class="nav-item">
+            <label for="field">Field:</label>
+            <select id="field" class="dropdown">
+            <option value="web development">Web Development</option>
+            <option value="data science">Data Science</option>
+            <option value="cloud engineering">Cloud Engineering</option>
+            <option value="cyber security">Cyber Security</option>
+            </select>
+        </div>
+        <div class="nav-item">
+            <label for="cities">Cities:</label>
+            <select
+            id="cities"
+            class="dropdown"
+            multiple="multiple"
+            style="width: 100%"
+            >
+            <option value="vadodara">Vadodara</option>
+            <option value="ahmedabad">Ahmedabad</option>
+            <option value="gandhinagar">Gandhinagar</option>
+            <option value="surat">Surat</option>
+            <option value="pune">Pune</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="bangalore">Banglaore</option>
+            <option value="delhi">Delhi</option>
+            <option value="hyderabad">Hyderabad</option>
+            <option value="indore">Indore</option>
+            </select>
+        </div>
+        <div class="nav-item">
+            <label for="experience">Experience (years):</label>
+            <input
+            type="number"
+            id="experience"
+            class="number-input"
+            min="0"
+            placeholder="Enter experience"
+            />
+        </div>
+        <div class="nav-item">
+            <button class="submit-btn" onclick="handleSaveSubmit()">
+            Save and Submit
+            </button>
+        </div>
       </div>
     </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- <div id="barchart-container"></div> -->
-    <div id="barchart-container" style="width:100%;max-width:700px"></div>
+    <div id="barchart-container"></div>
+    <!-- <div id="barchart-container" style="width:100%;max-width:700px"></div> -->
 
     <script>
       $(document).ready(function () {
@@ -125,7 +126,8 @@
         const experience = document.getElementById("experience").value;
         // alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
         // fetch("http://localhost:5000/api/v1/known-field-data", {
-        // fetch("http://localhost:4000/api/v1/known-field-data", {
+          // fetch("http://localhost:4000/api/v1/test", {
+            
         fetch("http://localhost:4000/api/v1/known-field-data", {
           method: "POST",
           body: JSON.stringify({
@@ -144,8 +146,8 @@
             console.log("jsonData")
             console.log(jsonData)
             // responseData = jsonData
-            const xArray = jsonData.skills.slice(0, 10) || ["Italy", "France", "Spain", "USA", "Argentina"];
-            const yArray = jsonData.values.slice(0, 10) || [55, 49, 44, 24, 15];
+            const xArray = jsonData.skills.slice(0, 10) 
+            const yArray = jsonData.values.slice(0, 10) 
             const data = [{
                 x:xArray,
                 y:yArray,
@@ -157,6 +159,8 @@
             const layout = {title:`Top skills in ${field}`};
 
             Plotly.newPlot("barchart-container", data, layout);
+            let containerdiv = document.getElementById("main-container")
+            containerdiv.parentNode.removeChild(containerdiv)
           })
           .catch();
       }
