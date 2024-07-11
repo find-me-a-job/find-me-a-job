@@ -1,29 +1,34 @@
 #PORT = 5000
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-# from scrappers import scrapeKnownField, scrapeNaukriDotCom
-from scrappersV2 import scrapeNaukriDotCom
+from scrappers import scrapeNaukriDotCom
+from dataCleaning import dataCleaning
+# from scrappersV2 import scrapeNaukriDotCom
 import json
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True)
+CORS(app)
 
 @app.route("/")
 def home():
     return "home"
 
-@app.route("/api/v1/test")
+@app.route("/api/v1/test", methods=["GET", "POST"])
 def test():
-    print("tsetprint")
-    return "hello from test"
+    print("testprint")
+    return jsonify({"message": "this is a test message"})
 
 @app.route("/api/v1/known-field-data", methods=["POST"])
 def data():
     info = json.loads(request.data.decode())
-    data = scrapeNaukriDotCom(info)
-    print("=======================================")
-    print(data)
-    return jsonify(data)
+    print(f"info: {info}")
+    data = scrapeNaukriDotCom(info["title"], info["saved_location_list"], info["experience"])
+    with open("NaukriDotComResponse.json", "w+") as f:
+        f.write(str(data))
+    print(f"==================DATA: {data}=====================")
+    cleanedData = dataCleaning()
+    # print(data)
+    return jsonify(cleanedData)
 
 # @app.route("/api/v2/known-field-data", methods=["POST"])
 # def data():
@@ -38,4 +43,4 @@ def naukriData():
     return retObject
 
 if __name__ == "__main__":
-    app.run(host= "0.0.0.0", port=5000, debug=True)
+    app.run(host= "0.0.0.0", port=4000, debug=True)

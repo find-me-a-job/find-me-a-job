@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Nav Bar with Enhanced Dropdowns</title>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        header {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            background-color: #333;
+            padding: 10px;
+            color: white;
+        }
+        .nav-item {
+            margin: 0 10px;
+        }
+        .dropdown, .number-input {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+        }
+        .submit-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+        label {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="nav-item">
+            <label for="field">Field:</label>
+            <select id="field" class="dropdown">
+                <option value="web_dev">Web Development</option>
+                <option value="data_sci">Data Science</option>
+                <option value="cloud_eng">Cloud Engineering</option>
+                <option value="cyber_sec">Cyber Security</option>
+            </select>
+        </div>
+        <div class="nav-item">
+            <label for="cities">Cities:</label>
+            <select id="cities" class="dropdown" multiple="multiple" style="width: 200px;">
+                <option value="vadodara">Vadodara</option>
+                <option value="ahmedabad">Ahmedabad</option>
+                <option value="gandhinagar">Gandhinagar</option>
+                <option value="surat">Surat</option>
+                <option value="pune">Pune</option>
+                <option value="mumbai">Mumbai</option>
+                <option value="bangalore">Banglaore</option>
+                <option value="delhi">Delhi</option>
+                <option value="hyderabad">Hyderabad</option>
+                <option value="indore">Indore</option>
+            </select>
+        </div>
+        <div class="nav-item">
+            <label for="experience">Experience (years):</label>
+            <input type="number" id="experience" class="number-input" min="0" placeholder="Enter experience">
+        </div>
+        <div class="nav-item">
+            <button class="submit-btn" onclick="handleSaveSubmit()">Save and Submit</button>
+        </div>
+    </header>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#cities').select2({
+                placeholder: "Select cities",
+                allowClear: true
+            });
+        });
+
+        function handleSaveSubmit() {
+            const field = document.getElementById('field').value;
+            const cities = $('#cities').val();
+            const experience = document.getElementById('experience').value;
+            alert(`Selected Field: ${field}, Selected Cities: ${cities.join(', ')}, Experience: ${experience} years`);
+            fetch("http://localhost:5000/api/v1/known-field-data", {
+                method: "POST",
+                body: JSON.stringify({
+                    title: field,
+                    location: cities,
+                    experience: experience
+                })
+            })
+            .then((data)=>{
+                console.log(data.json())
+            })
+            .catch()
+        }
+    </script>
+</body>
+</html>
