@@ -1,3 +1,6 @@
+# this is a depricated repo.
+
+
 ### [FMJ](https://findmeajob.info) is created to help college students like ourselves to find which field is right for them through real data scrapped in real time.
 ### And if you do know which field you wish to advance in, but are curious about which skills would result in you getting hiered or getting a hike, it can help you there as well again with real data.
 
