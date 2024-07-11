@@ -81,31 +81,31 @@ def scrapeNaukriDotCom(title: str, location: list, experience: int) -> list:
                 listings.append(tempList)
             except KeyError as err:
                 continue
-    with open("data", "wb") as fp:   #Pickling
-        pickle.dump(listings, fp)
+    # with open("data", "wb") as fp:   #Pickling
+    #     pickle.dump(listings, fp)
     return listings
 
-if __name__ == "__main__":
+# if __name__ == "__main__":
     
-    with open('user_info.json', 'r') as file:
-        user_data_json = json.load(file)
+#     with open('user_info.json', 'r') as file:
+#         user_data_json = json.load(file)
     
-    title = user_data_json["title"]  # string
-    location = user_data_json["saved_location_list"]  # list
-    experience = user_data_json["experience"]  # int
+#     title = user_data_json["title"]  # string
+#     location = user_data_json["saved_location_list"]  # list
+#     experience = user_data_json["experience"]  # int
 
-    # Prepare title and location for URL
-    titleSEOKey = title.replace(" ", "-")
-    title = title.replace(" ", "%20")
+#     # Prepare title and location for URL
+#     titleSEOKey = title.replace(" ", "-")
+#     title = title.replace(" ", "%20")
 
-    # Prepare location for URL
-    if len(location) > 1:
-        location_str = "%2C%20".join(location)
+#     # Prepare location for URL
+#     if len(location) > 1:
+#         location_str = "%2C%20".join(location)
         
-    else:
-        location_str = location[0]
+#     else:
+#         location_str = location[0]
 
-    location = location_str
-    data = scrapeNaukriDotCom(title, location, experience)
-    with open("data", "wb") as fp:   #Pickling
-        pickle.dump(data, fp)
+#     location = location_str
+#     data = scrapeNaukriDotCom(title, location, experience)
+#     with open("data", "wb") as fp:   #Pickling
+#         pickle.dump(data, fp)

@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from scrappers import scrapeNaukriDotCom
 from dataCleaning import dataCleaning
+from userTailoredListing import listingSortedBySkills
 # from scrappersV2 import scrapeNaukriDotCom
 import json
 
@@ -23,10 +24,12 @@ def data():
     info = json.loads(request.data.decode())
     print(f"info: {info}")
     data = scrapeNaukriDotCom(info["title"], info["saved_location_list"], info["experience"])
-    with open("NaukriDotComResponse.json", "w+") as f:
-        f.write(str(data))
+    # with open("NaukriDotComResponse.json", "w+") as f:
+    #     f.write(str(data))
     print(f"==================DATA: {data}=====================")
-    cleanedData = dataCleaning()
+    cleanedData = {}
+    cleanedData["skills_chart"] = dataCleaning(data)
+    cleanedData["skills_listings"] = listingSortedBySkills(data)
     # print(data)
     return jsonify(cleanedData)
 

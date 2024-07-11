@@ -1,9 +1,9 @@
 import pickle
 import pandas as pd
 
-def dataCleaning():
-    with open("data", "rb") as fp:   # Unpickling
-        data = pickle.load(fp)  
+def dataCleaning(data):
+    # with open("data", "rb") as fp:   # Unpickling
+        # data = pickle.load(fp)  
     
     df = pd.DataFrame(data, columns=["jobTitle","companyName","skills","jobDetailURL","jobDescription","salary","listingType","portal"])
 
@@ -127,4 +127,3 @@ def dataCleaning():
 
     return skill_value_dict
 
-    
