@@ -111,7 +111,7 @@ def dataCleaning(data):
                 skills[skill]=1
 
     df["skills"].apply(extracting_skills)
-
+    total_jobs = len(df.index)
     #sorting the skill dictionary in decresing order to frequency of the skills
     sorted_skills = dict(sorted(skills.items(), key=lambda item: item[1], reverse=True))
     
@@ -123,7 +123,7 @@ def dataCleaning(data):
         value_list.append(value)
     
     #this dict contains 2 key value pair each value is a tuple of all the skill and its corresponding
-    skill_value_dict = {"skills" : tuple(skill_list),"values" : tuple(value_list)}
+    skill_value_dict = {"total_jobs":total_jobs,"skills" : tuple(skill_list),"values" : tuple(value_list)}
 
     return skill_value_dict
 

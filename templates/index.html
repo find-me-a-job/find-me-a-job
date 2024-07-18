@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plotly Graph and Job Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            text-align: center;
+        }
+        .job-listing {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: left;
+        }
+        h1, h2 {
+            margin-top: 20px;
+        }
+        #graph-container {
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+    <!-- Include Plotly.js -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Skills Frequency Bar Graph</h1>
+        <div id="graph-container">
+            <!-- The Plotly graph will be rendered here -->
+            {{ topSkills|safe }}
+        </div>
+        <h2>Job Listings</h2>
+        <div id="job-listings">
+            <!-- Job listings will be rendered here -->
+            {% for job in job_listings %}
+            <div class="job-listing">
+                <h3>{{ job.title }}</h3>
+                <p><strong>Company:</strong> {{ job.company }}</p>
+                <p><strong>Location:</strong> {{ job.location }}</p>
+                <p>{{ job.summary }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

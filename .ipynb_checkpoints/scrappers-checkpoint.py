@@ -33,25 +33,21 @@ listings = []
 def scrapeNaukriDotCom() -> list:
     try:
         with open('user_info.json', 'r') as file:
-            print("loading done")
             user_info = json.load(file)
-        
+        title = user_info["title"]
+        location = user_info["saved_location_list"]
+        experience = user_info["experience"]
     except:
-        print("Error!!!")
+        print("hey")
 
-    title = user_info["title"]
-    location = user_info["saved_location_list"]
-    experience = user_info["experience"]
     listings = []
 
     # Prepare location for URL
     if len(location) > 1:
         location_str = "%2C%20".join(location)
         
-    elif len(location)==1 :
-        location_str = location[0]
     else:
-        location_str = None
+        location_str = location[0]
 
     location = location_str
     titleSEOKey = title.replace(" ", "-")
@@ -99,7 +95,6 @@ def scrapeNaukriDotCom() -> list:
     return listings
 
 # if __name__ == "__main__":
-    # scrapeNaukriDotCom()
     
 #     with open('user_info.json', 'r') as file:
 #         user_data_json = json.load(file)
