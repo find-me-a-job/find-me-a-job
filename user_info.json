@@ -1,9 +1,12 @@
 {
-    "title": "web development",
+    "title": "data science",
     "saved_location_list": [
         "vadodara"
     ],
-    "skill_stack": [],
+    "skill_stack": [
+        "html",
+        "python"
+    ],
     "experience": "",
     "favourite": []
 }

@@ -1,474 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Known Field Home page</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-        margin: 0;
-      }
-
-      .nav-item {
-        margin-bottom: 10px;
-      }
-
-      .label-container {
-        display: inline-flex;
-        align-items: center;
-      }
-
-      .inline-label {
-        margin-right: 5px;
-        font-size: 16px;
-      }
-
-      .hover-container {
-        display: inline-block;
-        position: relative;
-      }
-
-      .info-button {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background-color: #007bff;
-        color: #fff;
-        text-align: center;
-        border: none;
-        border-radius: 50%;
-        font-size: 12px;
-        line-height: 20px;
-        cursor: pointer;
-      }
-
-      .hover-instructions {
-        display: none;
-        position: absolute;
-        background-color: #333;
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 5px;
-        white-space: nowrap;
-        z-index: 1;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-
-      .hover-container:hover .hover-instructions {
-        display: block;
-      }
-
-      .dropdown {
-        display: block;
-        margin-top: 5px;
-      }
-
-      .container {
-        background-color: #ffffff;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        width: 300px;
-      }
-      .dropdown,
-      .number-input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-      }
-      .submit-btn {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin: 20px 0;
-        border: none;
-        border-radius: 10px;
-        background-color: #4caf50;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      .submit-btn:hover {
-        background-color: #45a049;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Load d3.js -->
-
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Market Analysis</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <div id="graph-container">
-    <div id="main-container">
-      <div class="container">
-        <div class="nav-item">
-          <label for="field" class="inline-label">Field:</label>
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Select the field that you want to excel in.<br />
-              More fields coming soon.
-            </div>
-          </div>
-          <select id="field" class="dropdown">
-            <option value="web development">Web Development</option>
-            <option value="data science">Data Science</option>
-            <option value="cloud engineering">Cloud Engineering</option>
-            <option value="cyber security">Cyber Security</option>
-          </select>
-        </div>
-        <div class="nav-item">
-          <label for="cities" class="inline-label">Cities:</label>
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Select all the locations that you are open to relocate or stay.<br />
-              Not selecting any location will display results for the whole of
-              India.<br />
-            </div>
-          </div>
-          <select
-            id="cities"
-            class="dropdown"
-            multiple="multiple"
-            style="width: 100%"
-          >
-            <option value="vadodara">Vadodara</option>
-            <option value="ahmedabad">Ahmedabad</option>
-            <option value="gandhinagar">Gandhinagar</option>
-            <option value="surat">Surat</option>
-            <option value="pune">Pune</option>
-            <option value="mumbai">Mumbai</option>
-            <option value="bangalore">Bangalore</option>
-            <option value="delhi">Delhi</option>
-            <option value="hyderabad">Hyderabad</option>
-            <option value="indore">Indore</option>
-          </select>
-        </div>
-        <div class="nav-item">
-          <label for="experience" class="inline-label"
-            >Experience (years):</label
-          >
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Enter your number of experience years.<br />
-              0 = Freshers.<br />
-              1 = One year of experience, and so on.<br />
-              By default, it will take all experience years.
-            </div>
-          </div>
-          <input
-            type="number"
-            id="experience"
-            class="number-input"
-            min="0"
-            placeholder="Enter experience"
-          />
-        </div>
-        <div class="nav-item">
-          <button class="submit-btn" onclick="handleSaveSubmit()">
-            Save and Submit
-          </button>
-        </div>
-      </div>
-      </div>
-      <!-- Add this div for the graph -->
-    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .info-button {
+            background-color: #f1f1f1;
+            border: none;
+            color: black;
+            padding: 2px 6px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .hover-instructions {
+            display: none;
+            background-color: #f9f9f9;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+        #results-container {
+            display: none;
+        }
+        .graph-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        #job-listings {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            height: 600px;
+            overflow-y: auto;
+        }
+        .job-listing {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+        }
+        .job-listing h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .company-name {
+            font-weight: bold;
+            color: #555;
+        }
+        .skills-container {
+            margin-top: 10px;
+        }
+        .skill-box {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .acquired {
+            background-color: #e6f3e6;
+            color: #2c662d;
+        }
+        .not-acquired {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="form-container">
+            <h1>Job Market Analysis</h1>
+            <div class="form-group">
+                <label for="field">Field:</label>
+                <select id="field">
+                    <option value="web development">Web Development</option>
+                    <option value="data science">Data Science</option>
+                    <option value="cloud engineering">Cloud Engineering</option>
+                    <option value="cyber security">Cyber Security</option>
+                </select>
+                <button class="info-button" onclick="toggleInstructions('field-instructions')">i</button>
+                <div id="field-instructions" class="hover-instructions">
+                    Select the field that you want to excel in. More fields coming soon.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cities">Cities:</label>
+                <select id="cities" multiple>
+                    <option value="vadodara">Vadodara</option>
+                    <option value="ahmedabad">Ahmedabad</option>
+                    <option value="gandhinagar">Gandhinagar</option>
+                    <option value="surat">Surat</option>
+                    <option value="pune">Pune</option>
+                    <option value="mumbai">Mumbai</option>
+                    <option value="bangalore">Bangalore</option>
+                    <option value="delhi">Delhi</option>
+                    <option value="hyderabad">Hyderabad</option>
+                    <option value="indore">Indore</option>
+                </select>
+                <button class="info-button" onclick="toggleInstructions('cities-instructions')">i</button>
+                <div id="cities-instructions" class="hover-instructions">
+                    Select all the locations that you are open to relocate or stay. Not selecting any location will display results for the whole of India.
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="experience">Experience (years):</label>
+                <input type="number" id="experience" min="0">
+                <button class="info-button" onclick="toggleInstructions('experience-instructions')">i</button>
+                <div id="experience-instructions" class="hover-instructions">
+                    Enter your number of experience years. 0 = Freshers. 1 = One year of experience, and so on. By default, it will take all experience years.
+                </div>
+            </div>
+            <button class="submit-btn" onclick="handleSaveSubmit()">Save and Submit</button>
+        </div>
+
+        <div id="results-container" style="display: none;">
+          <h2>Skills Frequency</h2>
+          <div id="skills-graph" class="graph-container"></div>
+      
+          <h2>Job Titles Frequency</h2>
+          <div id="job-titles-graph" class="graph-container"></div>
+      
+          <h2>Job Listings</h2>
+          <div id="job-listings">
+              <!-- Job listings will be rendered here -->
+          </div>
+      </div>
+
     <script>
-      $(document).ready(function () {
-        $("#cities").select2({
-          placeholder: "Select cities",
-          allowClear: true,
+        $(document).ready(function() {
+            $("#cities").select2({
+                placeholder: "Select cities",
+                allowClear: true
+            });
         });
-      });
 
-      function handleSaveSubmit() {
-        const field = document.getElementById("field").value;
-        const cities = $("#cities").val();
-        const experience = document.getElementById("experience").value;
+        function toggleInstructions(id) {
+            var instructions = document.getElementById(id);
+            instructions.style.display = instructions.style.display === "none" ? "block" : "none";
+        }
 
-        fetch("http://127.0.0.1:4000/api/v1/known-field-data", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: field,
-            saved_location_list: cities,
-            experience: experience,
-          }),
-        })
-          .then((response) => response.text())
-          .then((html) => {
-            // Replace the content of the graph container with the new HTML
-            document.getElementById("graph-container").innerHTML = html;
-          })
-          .catch((error) => console.error("Error:", error));
-      }
+        function handleSaveSubmit() {
+            var field = document.getElementById("field").value;
+            var cities = $("#cities").val();
+            var experience = document.getElementById("experience").value;
+
+            document.getElementById("form-container").style.display = "none";
+            document.getElementById("results-container").style.display = "block";
+
+            fetch("http://127.0.0.1:4000/api/v1/known-field-data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title: field,
+                    saved_location_list: cities,
+                    experience: experience
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var skillsGraph = JSON.parse(data.skillGraph);
+                var jobTitlesGraph = JSON.parse(data.jobTitleGraph);
+
+                Plotly.newPlot('skills-graph', skillsGraph.data, skillsGraph.layout);
+                Plotly.newPlot('job-titles-graph', jobTitlesGraph.data, jobTitlesGraph.layout);
+
+                renderJobListings(data.jobListings);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+
+        function renderJobListings(listings) {
+            var jobListingsContainer = document.getElementById("job-listings");
+            jobListingsContainer.innerHTML = "";
+
+            listings.forEach(job => {
+                var jobElement = document.createElement("div");
+                jobElement.className = "job-listing";
+                jobElement.innerHTML = `
+                    <h3><a href="${job.url}" target="_blank">${job.job_title}</a></h3>
+                    <p><strong>Company:</strong> ${job.company_name}</p>
+                    <div class="skills-container">
+                        ${job.skill_diff.map(skill => `
+                            <span class="skill-box ${skill.acquired ? 'acquired' : 'not-acquired'}">
+                                ${skill.skill}
+                            </span>
+                        `).join('')}
+                    </div>
+                `;
+                jobListingsContainer.appendChild(jobElement);
+            });
+        }
     </script>
-  </body>
+</body>
 </html>
-
-<!-- <!DOCTYPE html>
-
-
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Known Field Home page</title>
-    <link
-      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
-      rel="stylesheet"
-    />
-    <style>
-      /* hower container start  */
-      body {
-        font-family: Arial, sans-serif;
-      }
-
-      .nav-item {
-        margin-bottom: 10px;
-      }
-
-      .label-container {
-        display: inline-flex;
-        align-items: center;
-      }
-
-      .inline-label {
-        margin-right: 5px;
-        font-size: 16px;
-      }
-
-      .hover-container {
-        display: inline-block;
-        position: relative;
-      }
-
-      .info-button {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background-color: #007bff;
-        color: #fff;
-        text-align: center;
-        border: none;
-        border-radius: 50%;
-        font-size: 12px;
-        line-height: 20px;
-        cursor: pointer;
-      }
-
-      .hover-instructions {
-        display: none;
-        position: absolute;
-        background-color: #333;
-        color: #fff;
-        padding: 5px 10px;
-        border-radius: 5px;
-        white-space: nowrap;
-        z-index: 1;
-        top: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-
-      .hover-container:hover .hover-instructions {
-        display: block;
-      }
-
-      .dropdown {
-        display: block;
-        margin-top: 5px;
-      }
-
-      /* hower container end  */
-      .inline-label {
-        display: inline-block;
-        margin-right: 5px;
-        font-size: 16px;
-      }
-      body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        background-color: #f0f0f0;
-        margin: 0;
-        font-family: Arial, sans-serif;
-      }
-      .container {
-        background-color: #ffffff;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        text-align: center;
-        width: 300px;
-      }
-      .dropdown,
-      .number-input {
-        width: 100%;
-        padding: 10px;
-        margin: 10px 0;
-        border-radius: 10px;
-        border: 1px solid #ccc;
-      }
-      .submit-btn {
-        display: block;
-        width: 100%;
-        padding: 10px;
-        margin: 20px 0;
-        border: none;
-        border-radius: 10px;
-        background-color: #4caf50;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-      }
-      .submit-btn:hover {
-        background-color: #45a049;
-      }
-      label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: bold;
-      }
-    </style>
-  </head>
-  <body>
-    
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <div id="main-container">
-      <div class="container">
-        <div class="nav-item">
-          <label for="field" class="inline-label">Field:</label>
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Select the field that you want to excel in.<br />
-              More field is coming soon
-            </div>
-          </div>
-          <select id="field" class="dropdown">
-            <option value="web development">Web Development</option>
-            <option value="data science">Data Science</option>
-            <option value="cloud engineering">Cloud Engineering</option>
-            <option value="cyber security">Cyber Security</option>
-          </select>
-        </div>
-        <div class="nav-item">
-          <label for="cities" class="inline-label">Cities:</label>
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Select all the location thay you are open to relocate or stay
-              <br />
-              Not selecting any location will display result of whole of
-              India<br />
-            </div>
-          </div>
-          <select
-            id="cities"
-            class="dropdown"
-            multiple="multiple"
-            style="width: 100%"
-          >
-            <option value="vadodara">Vadodara</option>
-            <option value="ahmedabad">Ahmedabad</option>
-            <option value="gandhinagar">Gandhinagar</option>
-            <option value="surat">Surat</option>
-            <option value="pune">Pune</option>
-            <option value="mumbai">Mumbai</option>
-            <option value="bangalore">Banglaore</option>
-            <option value="delhi">Delhi</option>
-            <option value="hyderabad">Hyderabad</option>
-            <option value="indore">Indore</option>
-          </select>
-        </div>
-        <div class="nav-item">
-          <label for="experience" class="inline-label"
-            >Experience (years):</label
-          >
-          <div class="hover-container">
-            <button class="info-button">i</button>
-            <div class="hover-instructions">
-              Enter your number of experience <br />
-              0 = Freshers <br />
-              1 = one year of experience and so on <br />
-              by default it will take all the enperience years
-            </div>
-          </div>
-          <input
-            type="number"
-            id="experience"
-            class="number-input"
-            min="0"
-            placeholder="Enter experience"
-          />
-        </div>
-        <div class="nav-item">
-          <button class="submit-btn" onclick="handleSaveSubmit()">
-            Save and Submit
-          </button>
-        </div>
-      </div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <div id="barchart-container"></div>
-
-    <script>
-      $(document).ready(function () {
-        $("#cities").select2({
-          placeholder: "Select cities",
-          allowClear: true,
-        });
-      });
-      // user_info.json updation code block end
-
-      function handleSaveSubmit() {
-  const field = document.getElementById("field").value;
-  const cities = $("#cities").val();
-  const experience = document.getElementById("experience").value;
-
-  fetch("http://localhost:4000/api/v1/known-field-data", {
-    method: "POST",
-    body: JSON.stringify({
-      title: field,
-      saved_location_list: cities,
-      experience: experience,
-    }),
-  })
-    .then((response) => response.text())
-    .then((html) => {
-      // Update graph-container with the received HTML
-      document.getElementById("graph-container").innerHTML = html;
-    })
-    .catch((error) => console.error("Error:", error));
-}
-    </script>
-  </body>
-</html> -->

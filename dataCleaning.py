@@ -111,19 +111,47 @@ def dataCleaning(data):
                 skills[skill]=1
 
     df["skills"].apply(extracting_skills)
-    total_jobs = len(df.index)
     #sorting the skill dictionary in decresing order to frequency of the skills
     sorted_skills = dict(sorted(skills.items(), key=lambda item: item[1], reverse=True))
+
+
+
+    jobTitles={}
+    def extracting_jobTitles(value):
+        
+        if value in jobTitles:
+            jobTitles[value]+=1
+        else:
+            jobTitles[value]=1
+
+    df["jobTitle"].apply(extracting_jobTitles)
+
+    #sorting the skill dictionary in decresing order to frequency of the skills
+    sorted_jobTitles = dict(sorted(jobTitles.items(), key=lambda item: item[1], reverse=True))
     
+
+
+
+
+
+    total_jobs = len(df.index)
     skill_list = []
-    value_list = []
+    skillValue_list = []
+    jobTitle_list = []
+    jobTitleValue_list = []
+
+    for key, value in sorted_jobTitles.items():
+        jobTitle_list.append(key)
+        jobTitleValue_list.append(value)
+
 
     for key, value in sorted_skills.items():
         skill_list.append(key)
-        value_list.append(value)
+        skillValue_list.append(value)
     
     #this dict contains 2 key value pair each value is a tuple of all the skill and its corresponding
-    skill_value_dict = {"total_jobs":total_jobs,"skills" : tuple(skill_list),"values" : tuple(value_list)}
+    skill_value_dict = {"total_jobs":total_jobs,"skills" : tuple(skill_list),"skillValues" : tuple(skillValue_list),"avg_sal":average_salary,"jobTitles":tuple(jobTitle_list),"jobTitleValues":tuple(jobTitleValue_list)}
+
 
     return skill_value_dict
 
