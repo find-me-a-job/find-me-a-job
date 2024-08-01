@@ -10,7 +10,7 @@ def listingSortedBySkills(data):
 
     users_skills = user_data_json["skill_stack"]
 
-    df = pd.DataFrame(data, columns=["jobTitle","companyName","skills","jobDetailURL","jobDescription","salary","listingType","portal"])
+    df = pd.DataFrame(data, columns=["jobTitle","companyName","skills","jobDetailURL","jobDescription","salary","experience","listingType","portal"])
     
     def no_missing_skills(value):
         

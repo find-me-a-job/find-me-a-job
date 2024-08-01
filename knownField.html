@@ -173,6 +173,9 @@
       
           <h2>Job Titles Frequency</h2>
           <div id="job-titles-graph" class="graph-container"></div>
+
+          <h2>Job Titles Frequency</h2>
+          <div id="levelDistribution" class="graph-container"></div>
       
           <h2>Job Listings</h2>
           <div id="job-listings">
@@ -216,10 +219,11 @@
             .then(data => {
                 var skillsGraph = JSON.parse(data.skillGraph);
                 var jobTitlesGraph = JSON.parse(data.jobTitleGraph);
+                var levelDistribution = JSON.parse(data.levelDistribution)
 
                 Plotly.newPlot('skills-graph', skillsGraph.data, skillsGraph.layout);
                 Plotly.newPlot('job-titles-graph', jobTitlesGraph.data, jobTitlesGraph.layout);
-
+                Plotly.newPlot('levelDistribution', levelDistribution.data, levelDistribution.layout);
                 renderJobListings(data.jobListings);
             })
             .catch(error => console.error('Error:', error));

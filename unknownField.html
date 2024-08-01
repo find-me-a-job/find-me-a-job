@@ -1,73 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dropdown Page</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Job Market Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        .dropdown {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 10px;
-            border: 1px solid #ccc;
-        }
-        .submit-btn {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin: 20px 0;
-            border: none;
-            border-radius: 10px;
-            background-color: #4CAF50;
-            color: white;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        .submit-btn:hover {
-            background-color: #45a049;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 0;
+        padding: 20px;
+        background-color: #f0f0f0;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      h1,
+      h2 {
+        color: #333;
+      }
+      .form-group {
+        margin-bottom: 20px;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+      select,
+      input[type="number"] {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .submit-btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .info-button {
+        background-color: #f1f1f1;
+        border: none;
+        color: black;
+        padding: 2px 6px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        margin: 4px 2px;
+        cursor: pointer;
+        border-radius: 50%;
+      }
+      .hover-instructions {
+        display: none;
+        background-color: #f9f9f9;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 5px;
+      }
+      #results-container {
+        display: none;
+      }
+      .graph-container {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      #job-listings {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 15px;
+        height: 600px;
+        overflow-y: auto;
+      }
+      .job-listing {
+        border: 1px solid #e8e8e8;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #fff;
+      }
+      .job-listing h3 {
+        margin-top: 0;
+        color: #333;
+      }
+      .company-name {
+        font-weight: bold;
+        color: #555;
+      }
+      .skills-container {
+        margin-top: 10px;
+      }
+      .skill-box {
+        display: inline-block;
+        padding: 3px 8px;
+        margin: 2px;
+        border-radius: 3px;
+        font-size: 12px;
+      }
+      .acquired {
+        background-color: #e6f3e6;
+        color: #2c662d;
+      }
+      .not-acquired {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <label for="combinations">Combinations:</label>
-        <select id="combinations" class="dropdown">
-            <option value="comb1">Data,Development,Cyber,Cloud</option>
-            <option value="comb2" disabled>App,web,ios,android</option>
-            <option value="comb3" disabled>DA,DS,ML,AI</option>
-        </select>
-        <label for="sites">Sites:</label>
-        <select id="sites" class="dropdown">
+      <div id="form-container">
+        <h1>Job Market Analysis</h1>
+        <div class="form-group">
+          <label for="combinations">Combinations:</label>
+          <select id="combinations" multiple>
+            <option value="Data Science">Data Science</option>
+            <option value="Web Development">Web Development</option>
+            <option value="Cloud Engineering">Cloud Engineering</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Machine Learning">Machine Learning</option>
+            <option value="App Development">App Development</option>
+          </select>
+          <button
+            class="info-button"
+            onclick="toggleInstructions('cities-instructions')"
+          >
+            i
+          </button>
+          <div id="cities-instructions" class="hover-instructions">
+            Select all the options that you want to compare
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label for="sites">Sites:</label>
+          <select id="sites" multiple>
             <option value="site1">Naukri.com</option>
             <option value="site2">Internshala</option>
-            <option value="site3" disabled >Linkedin</option>
-        </select>
-        <button class="submit-btn" onclick="handleSubmit()">Submit</button>
+            <option value="site3" disabled>Linkedin</option>
+          </select>
+          <button
+            class="info-button"
+            onclick="toggleInstructions('cities-instructions')"
+          >
+            i
+          </button>
+          <div id="cities-instructions" class="hover-instructions">
+            Select all the sites you wish to scrape
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="cities">Cities:</label>
+          <select id="cities" multiple>
+            <option value="vadodara">Vadodara</option>
+            <option value="ahmedabad">Ahmedabad</option>
+            <option value="gandhinagar">Gandhinagar</option>
+            <option value="surat">Surat</option>
+            <option value="pune">Pune</option>
+            <option value="mumbai">Mumbai</option>
+            <option value="bangalore">Bangalore</option>
+            <option value="delhi">Delhi</option>
+            <option value="hyderabad">Hyderabad</option>
+            <option value="indore">Indore</option>
+          </select>
+          <button
+            class="info-button"
+            onclick="toggleInstructions('cities-instructions')"
+          >
+            i
+          </button>
+          <div id="cities-instructions" class="hover-instructions">
+            Select all the locations that you are open to relocate or stay. Not
+            selecting any location will display results for the whole of India.
+          </div>
+        </div>
+        <button class="submit-btn" onclick="handleSubmit()">
+          Save and Submit
+        </button>
+      </div>
+      <div id="results-container" style="display: block;">
+        <div class="graph-container" id="no-of-jobs-graph"></div>
+        <div class="graph-container" id="job-level-graph"></div>
+        <div class="graph-container" id="salaries-graph"></div>
+        <div id="top-five-skills">
+          <h2>Top Five Skills</h2>
+          <table id="top-five-skills-table"></table>
+        </div>
+      </div>
     </div>
 
     <script>
-        function handleSubmit() {
-            const combination = document.getElementById('combinations').value;
-            const site = document.getElementById('sites').value;
-            alert(`Selected Combination: ${combination}, Selected Site: ${site}`);
-        }
-    </script>
-</body>
+      $(document).ready(function () {
+        $("#combinations").select2({
+          placeholder: "Select cities",
+          allowClear: true,
+        });
+        $("#cities").select2({
+          placeholder: "Select cities",
+          allowClear: true,
+        });
+        $("#sites").select2({
+          placeholder: "Select sites",
+          allowClear: true,
+        });
+      });
+      function handleSubmit() {
+  var combination = $("#combinations").val();
+  var cities = $("#cities").val();
+  var sites = $("#sites").val();
+
+  fetch("http://127.0.0.1:4000/api/v1/unknown-field-data", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      combination: combination,
+      sites: sites,
+      cities: cities,
+    }),
+  })
+  .then((response) => response.json())
+  .then((data) => {
+    console.log(data);
+    Plotly.newPlot('no-of-jobs-graph', JSON.parse(data.noOfJobs).data, JSON.parse(data.noOfJobs).layout);
+    Plotly.newPlot('job-level-graph', JSON.parse(data.jobLevel).data, JSON.parse(data.jobLevel).layout);
+    Plotly.newPlot('salaries-graph', JSON.parse(data.salaries).data, JSON.parse(data.salaries).layout);
+
+    // Create table for top five skills
+    const topFiveSkillsTable = document.getElementById('top-five-skills-table');
+    const topFiveSkillsData = data.topSkills;
+
+    // Create table headers
+    const tableHeaders = Object.keys(topFiveSkillsData);
+    const tableHeaderRow = document.createElement('tr');
+    const thSerial = document.createElement('th');
+    thSerial.textContent = 'S.No.';
+    tableHeaderRow.appendChild(thSerial);
+    tableHeaders.forEach((header) => {
+      const th = document.createElement('th');
+      th.textContent = header;
+      tableHeaderRow.appendChild(th);
+    });
+    topFiveSkillsTable.appendChild(tableHeaderRow);
+
+    // Create table rows
+    for (let i = 0; i < 5; i++) {
+      const tableRow = document.createElement('tr');
+      const tdSerial = document.createElement('td');
+      tdSerial.textContent = i + 1;
+      tableRow.appendChild(tdSerial);
+      tableHeaders.forEach((header) => {
+        const td = document.createElement('td');
+        td.textContent = topFiveSkillsData[header][i];
+        tableRow.appendChild(td);
+      });
+      topFiveSkillsTable.appendChild(tableRow);
+    }
+
+    // Add some basic styling to the table
+    topFiveSkillsTable.style.width = '100%';
+    topFiveSkillsTable.style.borderCollapse = 'collapse';
+    topFiveSkillsTable.style.border = '1px solid #ddd';
+    topFiveSkillsTable.style.marginBottom = '20px';
+
+    const ths = topFiveSkillsTable.getElementsByTagName('th');
+    for (let i = 0; i < ths.length; i++) {
+      ths[i].style.background = '#f0f0f0';
+      ths[i].style.padding = '8px';
+      ths[i].style.borderBottom = '1px solid #ddd';
+    }
+
+    const tds = topFiveSkillsTable.getElementsByTagName('td');
+    for (let i = 0; i < tds.length; i++) {
+      tds[i].style.padding = '8px';
+      tds[i].style.borderBottom = '1px solid #ddd';
+    }
+  })
+  .catch((error) => console.error(error));
+}</script>  </body>
 </html>
