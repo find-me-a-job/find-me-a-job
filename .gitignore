@@ -1,13 +1,6 @@
 __pycache__
 .venv
 .DS_Store
-Data_Cleaning.ipynb
-app.py
-data
-graphs.py
-knownFieldNext.html
-unknownField.html
-Untitled.ipynb
 knownData
 knownListings
 unknownData
