@@ -84,6 +84,7 @@ def scrapeNaukriDotComForKnown() -> list:
             continue
     # print(listings)
     
+    
     return listings
 
 
@@ -161,6 +162,7 @@ def scrapeNaukriDotComForUnknown(combinations,cities) -> list:
 
         # print(listings)
     # print(listings)
+    
     return listings
 
 

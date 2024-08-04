@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Market Analysis</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+            text-align: center;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 50px auto 0;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .button-container {
+            width: 40%;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .button-container h2 {
+            margin-top: 0;
+        }
+        .button-container p {
+            margin-bottom: 20px;
+        }
+        .button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .button:hover {
+            background-color: #3e8e41;
+        }
+        #results-container {
+            display: none;
+        }
+        .graph-container {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        #job-listings {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            height: 600px;
+            overflow-y: auto;
+        }
+        .job-listing {
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #fff;
+        }
+        .job-listing h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        .company-name {
+            font-weight: bold;
+            color: #555;
+        }
+        .skills-container {
+            margin-top: 10px;
+        }
+        .skill-box {
+            display: inline-block;
+            padding: 3px 8px;
+            margin: 2px;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+        .acquired {
+            background-color: #e6f3e6;
+            color: #2c662d;
+        }
+        .not-acquired {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <h1>Scraping Options</h1>
+    <div class="container">
+        <div class="button-container">
+            <h2>Use the previous Scraping</h2>
+            <p>Use the data from the previous scraping session.</p>
+            <button class="button" onclick="handleSaveSubmit()">Use the previous Scraping</button>
+        </div>
+        <div class="button-container">
+            <h2>Scrape Again</h2>
+            <p>Start a new scraping session to get fresh data.</p>
+            <a href="knownField.html"><button class="button">Scrape Again</button></a>
+        </div>
+    </div>
+    <div id="results-container">
+        <h2>Skills Frequency</h2>
+        <div id="skills-graph" class="graph-container"></div>
+    
+        <h2>Job Titles Frequency</h2>
+        <div id="job-titles-graph" class="graph-container"></div>
+
+        <h2>Level Distribution</h2>
+        <div id="levelDistribution" class="graph-container"></div>
+    
+        <h2>Job Listings</h2>
+        <div id="job-listings">
+            <!-- Job listings will be rendered here -->
+        </div>
+    </div>
+    <script>
+        function handleSaveSubmit() {
+            document.querySelector(".container").style.display = "none";
+            document.getElementById("results-container").style.display = "block";
+
+            fetch("http://127.0.0.1:4000/api/v1/pre-known-field-data", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({}),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                var skillsGraph = JSON.parse(data.skillGraph);
+                var jobTitlesGraph = JSON.parse(data.jobTitleGraph);
+                var levelDistribution = JSON.parse(data.levelDistribution);
+
+                Plotly.newPlot('skills-graph', skillsGraph.data, skillsGraph.layout);
+                Plotly.newPlot('job-titles-graph', jobTitlesGraph.data, jobTitlesGraph.layout);
+                Plotly.newPlot('levelDistribution', levelDistribution.data, levelDistribution.layout);
+                renderJobListings(data.jobListings);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while fetching data. Please try again.');
+            });
+        }
+
+        function renderJobListings(listings) {
+            var jobListingsContainer = document.getElementById("job-listings");
+            jobListingsContainer.innerHTML = "";
+
+            listings.forEach(job => {
+                var jobElement = document.createElement("div");
+                jobElement.className = "job-listing";
+                jobElement.innerHTML = `
+                    <h3><a href="${job.url}" target="_blank">${job.job_title}</a></h3>
+                    <p class="company-name">${job.company_name}</p>
+                    <div class="skills-container">
+                        ${job.skill_diff.map(skill => `
+                            <span class="skill-box ${skill.acquired ? 'acquired' : 'not-acquired'}">
+                                ${skill.skill}
+                            </span>
+                        `).join('')}
+                    </div>
+                `;
+                jobListingsContainer.appendChild(jobElement);
+            });
+        }
+    </script>
+</body>
+</html>

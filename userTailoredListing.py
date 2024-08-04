@@ -1,5 +1,6 @@
 import pandas as pd
 import json
+import pickle
 
 
 
@@ -79,6 +80,9 @@ def listingSortedBySkills(data):
         
         listing_dict["skill_diff"] = skill_diff
         listings.append(listing_dict)
+    
+    with open("knownListings", "wb") as fp:   #Pickling
+        pickle.dump(listings, fp)
     
     return listings
 

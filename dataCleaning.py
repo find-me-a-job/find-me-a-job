@@ -167,6 +167,9 @@ def dataCleaningKnown(data):
     #this dict contains 2 key value pair each value is a tuple of all the skill and its corresponding
     skill_value_dict = {"total_jobs":total_jobs,"skills" : tuple(skill_list),"skillValues" : tuple(skillValue_list),"avg_sal":average_salary,"jobTitles":tuple(jobTitle_list),"jobTitleValues":tuple(jobTitleValue_list),"entryLevel": entryLevel, "advanceLevel": advanceLevel}
 
+    with open("knownData", "wb") as fp:   #Pickling
+        pickle.dump(skill_value_dict, fp)
+
     return skill_value_dict
 
 
@@ -341,6 +344,9 @@ def dataCleaningUnknown(data):
     
     #this dict contains 2 key value pair each value is a tuple of all the skill and its corresponding
     returnData = {"total_jobs_comparision":listing_count_dict,"AvgSalary" : average_salary_dict,"experience_counts":field_experience_counts,"topFiveSkills" : top_skills_dict,}
-
+    
+    with open("unknownData", "wb") as fp:   #Pickling
+        pickle.dump(returnData, fp)
+    
     return returnData
 

@@ -156,14 +156,14 @@
                     Select all the locations that you are open to relocate or stay. Not selecting any location will display results for the whole of India.
                 </div>
             </div>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="experience">Experience (years):</label>
                 <input type="number" id="experience" min="0">
                 <button class="info-button" onclick="toggleInstructions('experience-instructions')">i</button>
                 <div id="experience-instructions" class="hover-instructions">
                     Enter your number of experience years. 0 = Freshers. 1 = One year of experience, and so on. By default, it will take all experience years.
-                </div>
-            </div>
+                </div> -->
+            <!-- </div> -->
             <button class="submit-btn" onclick="handleSaveSubmit()">Save and Submit</button>
         </div>
 
@@ -199,8 +199,8 @@
         function handleSaveSubmit() {
             var field = document.getElementById("field").value;
             var cities = $("#cities").val();
-            var experience = document.getElementById("experience").value;
-
+            // var experience = document.getElementById("experience").value;
+            var experience = ""
             document.getElementById("form-container").style.display = "none";
             document.getElementById("results-container").style.display = "block";
 
