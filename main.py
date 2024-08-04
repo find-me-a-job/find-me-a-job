@@ -15,11 +15,28 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 @app.route("/")
 def home():
-    return "home"
+    # return "home"
+    return render_template("index.html")
 
-@app.route("/api/v1/test", methods=["GET", "POST"])
-def test():
-    return jsonify({"message": "this is a test message"})
+@app.route("/preKnown.html")
+def pK():
+    # return "home"
+    return render_template("preKnown.html")
+
+@app.route("/preUnknown.html")
+def pUk():
+    # return "home"
+    return render_template("preUnknown.html")
+
+@app.route("/knownField.html")
+def kF():
+    # return "home"
+    return render_template("knownField.html")
+
+@app.route("/unknownField.html")
+def ukF():
+    # return "home"
+    return render_template("unknownField.html")
 
 
 @app.route("/api/v1/known-field-data", methods=["POST"])
