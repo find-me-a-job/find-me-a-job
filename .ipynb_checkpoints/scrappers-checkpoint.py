@@ -32,8 +32,13 @@ listings = []
 
 def scrapeNaukriDotCom() -> list:
     try:
-        with open('user_info.json', 'r') as file:
-            user_info = json.load(file)
+        # with open('user_info.json', 'r') as file:
+        #     user_info = json.load(file)
+        user_info = {
+            "title": "web development",
+            "saved_location_list": ["vadodara"],
+            "experience": 0
+        }
         title = user_info["title"]
         location = user_info["saved_location_list"]
         experience = user_info["experience"]

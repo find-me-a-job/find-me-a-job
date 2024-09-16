@@ -14,10 +14,14 @@ listings = []
 
 def scrapeNaukriDotComForKnown() -> list:
     try:
-        with open('user_info.json', 'r') as file:
-            print("loading done")
-            user_info = json.load(file)
-        
+        # with open('user_info.json', 'r') as file:
+        #     print("loading done")
+        #     user_info = json.load(file)
+        user_info = {
+            "title": "web development",
+            "saved_location_list": ["vadodara"],
+            "experience": 0
+        }
     except:
         print("Error!!!")
 

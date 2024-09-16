@@ -6,9 +6,14 @@ import pickle
 
 def listingSortedBySkills(data):
 
-    with open('user_info.json', 'r') as file:
-        user_data_json = json.load(file)
-
+    # with open('user_info.json', 'r') as file:
+    #     user_data_json = json.load(file)
+    user_data_json = {
+        "title": "web development",
+        "saved_location_list": ["vadodara"],
+        "experience": 0,
+        "skill_stack": []
+    }
     users_skills = user_data_json["skill_stack"]
 
     df = pd.DataFrame(data, columns=["jobTitle","companyName","skills","jobDetailURL","jobDescription","salary","experience","listingType","portal"])
@@ -81,8 +86,8 @@ def listingSortedBySkills(data):
         listing_dict["skill_diff"] = skill_diff
         listings.append(listing_dict)
     
-    with open("knownListings", "wb") as fp:   #Pickling
-        pickle.dump(listings, fp)
+    # with open("knownListings", "wb") as fp:   #Pickling
+    #     pickle.dump(listings, fp)
     
     return listings
 

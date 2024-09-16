@@ -45,11 +45,11 @@ def data():
         info = json.loads(request.data.decode())
         # print(f"Received data: {info}")
 
-        with open('user_info.json', 'r') as file:
-            user_info = json.load(file)
-        user_info.update(info)
-        with open('user_info.json', 'w') as file:
-            json.dump(user_info, file, indent=4)
+        # with open('user_info.json', 'r') as file:
+        #     user_info = json.load(file)
+        # user_info.update(info)
+        # with open('user_info.json', 'w') as file:
+        #     json.dump(user_info, file, indent=4)
 
         data = scrapeNaukriDotComForKnown()
         # print(f"Scraped data: {data}")
@@ -100,7 +100,7 @@ def data():
     
     except Exception as e:
         print("errrrrrrrror")
-        print(f"Error: {e}")
+        print(f"Error in known field: {e}")
         return jsonify({"error": str(e)}), 500
 
 
@@ -119,10 +119,11 @@ def predata():
         # data = scrapeNaukriDotComForKnown()
         # print(f"Scraped data: {data}")
         # ______________________Graph______________________________________
-        with open("knownData", "rb") as fp:
-            cleanedData = pickle.load(fp)
+        # with open("knownData", "rb") as fp:
+        #     cleanedData = pickle.load(fp)
         # cleanedData = dataCleaningKnown(data)
         # print(f"Cleaned data: {cleanedData}")
+        cleanedData = []
         totalJobs = cleanedData["total_jobs"]
 
         skillPercentages = [round((value / totalJobs) * 100, 2) for value in cleanedData["skillValues"][:10]]
@@ -152,15 +153,15 @@ def predata():
         # ______________________Graph______________________________________
 
         # ______________________Listings______________________________________
-        with open("knownListings", "rb") as fp:
-            listings = pickle.load(fp)
+        # with open("knownListings", "rb") as fp:
+        #     listings = pickle.load(fp)
         # listings = listingSortedBySkills(data)
         # ______________________Listings______________________________________
 
         response = {
             "skillGraph": topSkillsBar.to_json(),
             "jobTitleGraph": topJobTitles.to_json(),
-            "jobListings": listings,
+            # "jobListings": listings,
             "levelDistribution" : levelDistribution.to_json()
         }
 
@@ -236,12 +237,12 @@ def preUnknown():
     
     # data = scrapeNaukriDotComForUnknown(combination,cities)
 
-    with open("unknownData", "rb") as fp:
-            cleanedData = pickle.load(fp)
+    # with open("unknownData", "rb") as fp:
+    #         cleanedData = pickle.load(fp)
     # cleanedData = dataCleaningUnknown(data)
     # print(cleanedData)
 
-
+    cleanedData = []
     # Convert data to a list of dictionaries
     noOfJobs = [{'Field': field, 'Total Jobs': count} for field, count in cleanedData["total_jobs_comparision"].items()]
     # Create the figure
