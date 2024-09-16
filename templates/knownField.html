@@ -204,7 +204,7 @@
             document.getElementById("form-container").style.display = "none";
             document.getElementById("results-container").style.display = "block";
 
-            fetch("http://127.0.0.1:4000/api/v1/known-field-data", {
+            fetch("/api/v1/known-field-data", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

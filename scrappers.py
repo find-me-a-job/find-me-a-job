@@ -47,7 +47,10 @@ def scrapeNaukriDotComForKnown() -> list:
     
     httpxResponse = httpx.get(URL, headers=headers)
     jsonResponse = httpxResponse.json()
-    numberOfJobs = int(jsonResponse["noOfJobs"])
+    try:
+        numberOfJobs = int(jsonResponse["noOfJobs"])
+    except Exception as e:
+        print("Error in:", __name__, e)
     # if numberOfJobs == int("O"):
     #     return {}
     noOfPages = numberOfJobs//20
